@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Loja - Vanilla</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">LOJA</div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Buscar produtos...">
+        </div>
+        <button id="cartBtn" class="icon-btn">
+            <i data-lucide="shopping-cart"></i>
+            <span id="cartCount">0</span>
+        </button>
+    </header>
+
+    <nav class="category-tabs">
+        <button class="tab active" data-category="masculino">Masculino</button>
+        <button class="tab" data-category="feminino">Feminino</button>
+        <button class="tab" data-category="infantil">Infantil</button>
+    </nav>
+
+    <main id="app">
+        <section id="content-area">
+            </section>
+    </main>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-nav="home"><i data-lucide="home"></i></button>
+        <button class="nav-item" data-nav="favorites"><i data-lucide="heart"></i></button>
+        <button class="nav-item" data-nav="cart" id="bottomCartBtn"><i data-lucide="shopping-bag"></i></button>
+        <button class="nav-item" data-nav="profile"><i data-lucide="user"></i></button>
+    </nav>
+
+    <div id="cartSheet" class="cart-sheet">
+        <div class="cart-content">
+            <button id="closeCart">Fechar</button>
+            <h2>Seu Carrinho</h2>
+            <div id="cartItems"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
