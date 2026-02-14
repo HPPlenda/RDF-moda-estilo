@@ -2,49 +2,110 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Loja - Vanilla</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RDM Moda & Estilo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-
-    <header class="header">
-        <div class="logo">LOJA</div>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Buscar produtos...">
+    <div id="drawer" class="fixed inset-0 drawer flex">
+        <div class="w-4/5 h-full bg-gray-300 px-6 pt-24 pb-24 shadow-2xl overflow-y-auto">
+            <h2 class="font-bold text-lg mb-8 cursor-pointer uppercase" onclick="showPage('sobre')">O QUE É A RDM MODA & ESTILO?</h2>
+            <ul class="space-y-6 text-xl font-bold">
+                <li onclick="loadVitrine('masculino')" class="cursor-pointer">MASCULINO</li>
+                <li onclick="loadVitrine('feminino')" class="cursor-pointer">FEMININO</li>
+                <li onclick="loadVitrine('infantil')" class="cursor-pointer">INFANTIL</li>
+                <li onclick="showPage('pedidos')" class="cursor-pointer text-gray-600">MEUS PEDIDOS</li>
+            </ul>
         </div>
-        <button id="cartBtn" class="icon-btn">
-            <i data-lucide="shopping-cart"></i>
-            <span id="cartCount">0</span>
-        </button>
+        <div class="flex-1 bg-black/40" onclick="toggleMenu()"></div>
+    </div>
+
+    <header class="fixed top-0 w-full bg-white border-b p-4 flex justify-between items-center z-50 shadow-sm">
+        <i id="menu-icon" class="fa-solid fa-bars text-2xl icon-btn" onclick="toggleMenu()"></i>
+        <h1 class="font-bold text-lg">RDM Moda & Estilo</h1>
+        <div class="relative">
+            <i class="fa-solid fa-cart-shopping text-2xl icon-btn" onclick="showPage('carrinho')"></i>
+            <span id="cart-count" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+        </div>
     </header>
 
-    <nav class="category-tabs">
-        <button class="tab active" data-category="masculino">Masculino</button>
-        <button class="tab" data-category="feminino">Feminino</button>
-        <button class="tab" data-category="infantil">Infantil</button>
-    </nav>
+    <main>
+        <section id="home" class="page active px-4 text-center">
+            <img src="RDM moda & estilo.svg" alt="Logo RDM" class="logo-img mb-4 w-full max-w-xs mx-auto">
+            <input type="text" placeholder="Buscar roupas..." class="custom-input mb-8">
+            
+            <div class="grid grid-cols-3 gap-3">
+                <div onclick="loadVitrine('masculino')" class="cat-card bg-[#72bcd4] p-4 rounded-xl flex flex-col items-center" data-color="#72bcd4">
+                    <i class="fa-solid fa-shirt text-3xl mb-2"></i>
+                    <p class="font-bold text-[10px] uppercase">Masculino</p>
+                </div>
+                <div onclick="loadVitrine('feminino')" class="cat-card bg-[#f497a9] p-4 rounded-xl flex flex-col items-center" data-color="#f497a9">
+                    <i class="fa-solid fa-person-dress text-3xl mb-2"></i>
+                    <p class="font-bold text-[10px] uppercase">Feminino</p>
+                </div>
+                <div onclick="loadVitrine('infantil')" class="cat-card bg-[#f7d774] p-4 rounded-xl flex flex-col items-center" data-color="#f7d774">
+                    <i class="fa-solid fa-baby text-3xl mb-2"></i>
+                    <p class="font-bold text-[10px] uppercase">Infantil</p>
+                </div>
+            </div>
+        </section>
 
-    <main id="app">
-        <section id="content-area">
-            </section>
+        <section id="vitrine" class="page px-4">
+            <h2 id="vitrine-title" class="text-center font-bold text-xl mb-4 uppercase">Roupas</h2>
+            <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-6 pb-10"></div>
+        </section>
+
+        <section id="favoritos" class="page px-4">
+            <h2 class="text-center font-bold text-xl mb-6 uppercase">Meus Favoritos</h2>
+            <div id="fav-list" class="grid grid-cols-1 gap-4"></div>
+        </section>
+
+        <section id="cadastro" class="page px-4">
+            <h2 class="text-center font-bold text-xl mb-6 uppercase">Cadastro</h2>
+            <div class="space-y-4 font-bold text-sm">
+                <input id="username" type="text" placeholder="NOME DE USUÁRIO" class="custom-input">
+                <input id="email" type="email" placeholder="SEU MELHOR EMAIL" class="custom-input">
+                <input id="bairro" type="text" placeholder="SEU BAIRRO" class="custom-input">
+                <input id="rua" type="text" placeholder="NOME DA RUA" class="custom-input">
+                <input id="numero" type="text" placeholder="NÚMERO DA CASA" class="custom-input">
+                <input id="referencia" type="text" placeholder="PONTO DE REFERÊNCIA" class="custom-input">
+                <button id="save-btn" class="hidden w-full bg-gray-300 py-4 rounded-3xl font-bold uppercase" onclick="saveUser()">Salvar</button>
+            </div>
+        </section>
+
+        <section id="carrinho" class="page px-4">
+            <h2 class="text-center font-bold text-xl mb-6 uppercase">Carrinho</h2>
+            <div id="cart-list" class="space-y-4 mb-8"></div>
+            <div id="cart-total" class="bg-gray-300 p-4 rounded-xl text-center font-bold text-lg mb-4 uppercase">Total: R$ 0,00</div>
+            <button id="buy-btn" class="hidden neon-green w-full py-5 rounded-3xl font-bold text-2xl uppercase" onclick="finalizarCompra()">Adquirir Agora!</button>
+        </section>
+
+        <section id="pedidos" class="page px-4 text-center">
+            <h2 class="font-bold text-xl mb-10 uppercase">Meus Pedidos</h2>
+            <p id="pedidos-msg" class="text-gray-500 mb-8">Não há pedidos realizados</p>
+            <button onclick="showPage('home')" class="bg-black text-white px-8 py-3 rounded-full uppercase font-bold">Voltar para Home</button>
+        </section>
+
+        <section id="sobre" class="page px-4 text-center">
+            <img src="RDM moda & estilo.svg" alt="Sobre RDM" class="w-full max-w-xs mx-auto mb-4">
+            <div class="pb-20"> <p class="text-gray-800">
+                    <strong>RDM Moda & Estilo: Sua Loja em Manaus</strong><br><br>
+                    Bem-vindo à RDM Moda & Estilo! Criada pela empresária Cio Dira, nossa loja traz o melhor do varejo de alta qualidade para a palma da sua mão. 
+                    Com este app Android, você garante looks masculinos, femininos e infantis com praticidade total. 
+                    Navegue pelas categorias, escolha seus favoritos e receba no conforto da sua casa.
+                </p>
+            </div>
+        </section>
     </main>
 
     <nav class="bottom-nav">
-        <button class="nav-item active" data-nav="home"><i data-lucide="home"></i></button>
-        <button class="nav-item" data-nav="favorites"><i data-lucide="heart"></i></button>
-        <button class="nav-item" data-nav="cart" id="bottomCartBtn"><i data-lucide="shopping-bag"></i></button>
-        <button class="nav-item" data-nav="profile"><i data-lucide="user"></i></button>
+        <i class="fa-solid fa-house text-3xl icon-btn" onclick="showPage('home')"></i>
+        <i class="fa-solid fa-heart text-3xl icon-btn" onclick="showPage('favoritos')"></i>
+        <i class="fa-solid fa-user text-3xl icon-btn" onclick="showPage('cadastro')"></i>
+        <i class="fa-solid fa-calendar-days text-3xl icon-btn" onclick="showPage('pedidos')"></i>
     </nav>
-
-    <div id="cartSheet" class="cart-sheet">
-        <div class="cart-content">
-            <button id="closeCart">Fechar</button>
-            <h2>Seu Carrinho</h2>
-            <div id="cartItems"></div>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>
