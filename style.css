@@ -1,87 +1,99 @@
-:root {
-    --primary: #000;
-    --bg: #ffffff;
-    --gray: #f4f4f5;
-}
+body { font-family: 'Arial', sans-serif; margin: 0; background: #fff; overflow-x: hidden; overflow-y: hidden; }
 
-body {
-    font-family: system-ui, sans-serif;
-    margin: 0;
-    background-color: var(--bg);
-    padding-bottom: 80px;
-}
+/* Cores e Estados */
+.bg-masculino { background-color: #72bcd4 !important; }
+.bg-feminino { background-color: #f497a9 !important; }
+.bg-infantil { background-color: #f7d774 !important; }
+.neon-green { background-color: #39FF14; }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid var(--gray);
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 10;
-}
-
-.category-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 1rem;
-}
-
-.tab {
-    border: none;
-    background: none;
-    padding: 8px 16px;
+/* Animação de Ícones e Botões */
+.icon-btn {
+    color: #000;
+    transition: all 0.2s ease;
     cursor: pointer;
-    border-radius: 20px;
+}
+.icon-btn:active {
+    transform: scale(1.3);
+    color: #4b5563; 
 }
 
-.tab.active {
-    background: var(--primary);
-    color: white;
+/* Categorias Home */
+.cat-card {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+}
+.cat-card i { transition: color 0.3s; }
+.cat-card.clicked {
+    background-color: #000 !important;
+    transform: scale(1.1);
+}
+.cat-card.clicked i {
+    color: var(--cat-color);
 }
 
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
-    padding: 1rem;
+/* Pages */
+.page { 
+    display: none; 
+    height: 100vh; 
+    box-sizing: border-box; 
+    padding-top: 60px; 
+    padding-bottom: 100px; 
+    overflow-y: hidden; 
+}
+.page.active { display: block; animation: fadeIn 0.3s; }
+
+/* AJUSTE AQUI: Ativa o scroll na sessão SOBRE também */
+#vitrine.page, #favoritos.page, #carrinho.page, #sobre.page { 
+    overflow-y: auto; 
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Menu Lateral */
+.drawer { 
+    transition: transform 0.3s ease-in-out; 
+    transform: translateX(-100%); 
+    z-index: 40; 
+}
+.drawer.active { transform: translateX(0); }
+
+/* Card de Produto */
 .product-card {
-    border: 1px solid var(--gray);
-    border-radius: 8px;
-    padding: 10px;
+    background: white;
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     text-align: center;
 }
-
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
+.product-img {
+    height: 150px;
     width: 100%;
-    height: 60px;
-    background: white;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-top: 1px solid var(--gray);
+    object-fit: contain;
+    border-radius: 15px;
+    margin-bottom: 10px;
 }
 
-.cart-sheet {
-    position: fixed;
-    right: -100%;
-    top: 0;
-    width: 300px;
-    height: 100%;
-    background: white;
-    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-    transition: 0.3s;
-    z-index: 20;
-    padding: 20px;
-}
+/* Botões do Card */
+.btn-cart { background: #53565a; color: white; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+.btn-cart.active { background: white; color: #53565a; border: 2px solid #53565a; }
+.btn-fav { background: #f4d06f; color: black; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 8px; transition: 0.3s; }
+.btn-fav.active { background: #000; color: #f4d06f; }
 
-.cart-sheet.open {
-    right: 0;
+/* Bottom Nav */
+.bottom-nav { 
+    position: fixed; 
+    bottom: 0; 
+    width: 100%; 
+    background: white; 
+    border-top: 1px solid #ddd; 
+    display: flex; 
+    justify-content: space-around; 
+    padding: 15px 0; 
+    z-index: 50; 
 }
+.custom-input { border-radius: 25px; background: #e5e7eb; padding: 12px 20px; width: 100%; border: none; outline: none; }
+
+#home { overflow-y: hidden; }
