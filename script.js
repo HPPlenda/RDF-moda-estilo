@@ -2,7 +2,6 @@
 let cart = [];
 let favorites = [];
 let user = JSON.parse(localStorage.getItem('user')) || null;
-
 const allProducts = [
     { id: 1, name: "Camisa Casual", price: 49.99, cat: "masculino" },
     { id: 2, name: "Calça Jeans", price: 89.90, cat: "masculino" },
@@ -24,11 +23,24 @@ const allProducts = [
     { id: 18, name: "Shorts Kids", price: 25.99, cat: "infantil" }
 ];
 
+// ==================== NOVO: Input de pesquisa (exatamente o que você pediu) ====================
+function initSearchInput() {
+    const input = document.getElementById('search-input');
+    if (!input) return;
+    
+    input.addEventListener('focus', function() {
+        // Espera o teclado abrir e posiciona o input no centro (fica "parado" onde começou a digitar)
+        setTimeout(() => {
+            this.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 300);
+    });
+}
+
 function toggleMenu() {
     const drawer = document.getElementById('drawer');
     const menuIcon = document.getElementById('menu-icon');
     drawer.classList.toggle('active');
-    
+   
     if (drawer.classList.contains('active')) {
         menuIcon.classList.replace('fa-bars', 'fa-times');
     } else {
@@ -42,10 +54,10 @@ function showPage(pId) {
     drawer.classList.remove('active');
     const menuIcon = document.getElementById('menu-icon');
     if(menuIcon) menuIcon.classList.replace('fa-times', 'fa-bars');
-    
+   
     const target = document.getElementById(pId);
     if(target) target.classList.add('active');
-    
+   
     if(pId === 'carrinho') renderCart();
     if(pId === 'favoritos') renderFavorites();
     if(pId === 'pedidos') renderPedidos();
@@ -68,15 +80,15 @@ function loadVitrine(cat) {
     const grid = document.getElementById('products-grid');
     const vitrine = document.getElementById('vitrine');
     const title = document.getElementById('vitrine-title');
-    
+   
     vitrine.className = 'page px-4 bg-' + cat;
-    
+   
     const titleMap = {
         masculino: 'Masculinas',
         feminino: 'Femininas',
         infantil: 'Infantis'
     };
-    
+   
     title.innerText = "Roupas " + (titleMap[cat] || cat.charAt(0).toUpperCase() + cat.slice(1));
     const filtered = allProducts.filter(p => p.cat === cat);
     grid.innerHTML = filtered.map(prod => createProductCard(prod)).join('');
@@ -124,14 +136,14 @@ function renderCart() {
     const list = document.getElementById('cart-list');
     const totalEl = document.getElementById('cart-total');
     const buyBtn = document.getElementById('buy-btn');
-    
+   
     if(cart.length === 0) {
         list.innerHTML = "<p class='text-center text-gray-500'>Carrinho vazio</p>";
         totalEl.innerText = "Total: R$ 0,00";
         buyBtn.classList.add('hidden');
         return;
     }
-    
+   
     let total = 0;
     list.innerHTML = cart.map((item, index) => {
         total += item.price * item.qty;
@@ -254,3 +266,9 @@ function renderPedidos() {
         msg.classList.remove('text-red-500');
     }
 }
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    initSearchInput();
+    updateCartUI();
+});
