@@ -1,4 +1,18 @@
-body { font-family: 'Arial', sans-serif; margin: 0; background: #fff; overflow-x: hidden; overflow-y: hidden; }
+body { 
+    font-family: 'Arial', sans-serif; 
+    margin: 0; 
+    background: #fff; 
+    overflow-x: hidden; 
+    touch-action: manipulation;
+}
+
+/* BLOQUEIO TOTAL DE ZOOM */
+html, body, input, .custom-input {
+    -webkit-text-size-adjust: 100%;
+}
+.custom-input {
+    font-size: 16px !important; /* impede zoom automático no teclado */
+}
 
 /* Cores e Estados */
 .bg-masculino { background-color: #72bcd4 !important; }
@@ -14,7 +28,7 @@ body { font-family: 'Arial', sans-serif; margin: 0; background: #fff; overflow-x
 }
 .icon-btn:active {
     transform: scale(1.3);
-    color: #4b5563; 
+    color: #4b5563;
 }
 
 /* Categorias Home */
@@ -32,19 +46,25 @@ body { font-family: 'Arial', sans-serif; margin: 0; background: #fff; overflow-x
 }
 
 /* Pages */
-.page { 
-    display: none; 
-    height: 100vh; 
-    box-sizing: border-box; 
-    padding-top: 90px; 
-    padding-bottom: 100px; 
-    overflow-y: hidden; 
+.page {
+    display: none;
+    height: 100vh;
+    box-sizing: border-box;
+    padding-top: 90px;
+    padding-bottom: 100px;
+    overflow-y: hidden;
 }
 .page.active { display: block; animation: fadeIn 0.3s; }
 
-/* AJUSTE AQUI: Ativa o scroll na sessão SOBRE também */
-#vitrine.page, #favoritos.page, #carrinho.page, #sobre.page { 
-    overflow-y: auto; 
+/* SCROLL NA HOME + SOBRE (o que você pediu) */
+#home.page, #vitrine.page, #favoritos.page, #carrinho.page, #sobre.page {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Espaço extra na Home quando o teclado do celular abrir */
+#home.page {
+    padding-bottom: 380px;
 }
 
 @keyframes fadeIn {
@@ -53,10 +73,10 @@ body { font-family: 'Arial', sans-serif; margin: 0; background: #fff; overflow-x
 }
 
 /* Menu Lateral */
-.drawer { 
-    transition: transform 0.3s ease-in-out; 
-    transform: translateX(-100%); 
-    z-index: 40; 
+.drawer {
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(-100%);
+    z-index: 40;
 }
 .drawer.active { transform: translateX(0); }
 
@@ -83,18 +103,22 @@ body { font-family: 'Arial', sans-serif; margin: 0; background: #fff; overflow-x
 .btn-fav.active { background: #000; color: #f4d06f; }
 
 /* Bottom Nav */
-.bottom-nav { 
-    position: fixed; 
-    bottom: 0; 
-    width: 100%; 
-    background: white; 
-    border-top: 1px solid #ddd; 
-    display: flex; 
-    justify-content: space-around; 
-    padding: 15px 0; 
-    z-index: 50; 
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: white;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+    z-index: 50;
 }
-.custom-input { border-radius: 25px; background: #e5e7eb; padding: 12px 20px; width: 100%; border: none; outline: none; }
-
-#home { overflow-y: hidden; }
-
+.custom-input { 
+    border-radius: 25px; 
+    background: #e5e7eb; 
+    padding: 12px 20px; 
+    width: 100%; 
+    border: none; 
+    outline: none; 
+}
