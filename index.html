@@ -196,7 +196,7 @@
         <section id="home" class="page active text-center px-[13px]">
             <img src="RDM moda & estilo.svg" alt="Logo RDM" class="logo-img mb-1 w-full max-w-xs mx-auto">
             <input id="search-input" type="text" placeholder="Buscar roupas..." class="custom-input mb-1">
-  
+ 
             <div class="grid grid-cols-3 gap-3">
                 <div class="cat-card bg-[#72bcd4] p-4 rounded-xl flex flex-col items-center" data-color="#72bcd4" data-cat="masculino">
                     <i class="fa-solid fa-shirt text-3xl mb-2"></i>
@@ -234,7 +234,7 @@
         </section>
         <section id="carrinho" class="page px-4">
             <h2 class="text-center font-bold text-xl mb-6 uppercase">Carrinho</h2>
-         
+        
             <!-- NOVO: Área de ações para múltiplos itens selecionados (com modo de seleção) -->
             <div id="cart-multi-actions" class="hidden mb-4 flex items-center justify-between bg-white p-3 rounded-2xl shadow-sm border">
                 <div id="multi-left" class="font-bold text-sm text-gray-600"></div>
@@ -322,7 +322,7 @@
         function initSearchInput() {
             const input = document.getElementById('search-input');
             if (!input) return;
-   
+  
             input.addEventListener('focus', function() {
                 // Espera o teclado abrir e posiciona o input no centro (fica "parado" onde começou a digitar)
                 setTimeout(() => {
@@ -361,7 +361,7 @@
             const drawer = document.getElementById('drawer');
             const menuIcon = document.getElementById('menu-icon');
             drawer.classList.toggle('active');
-  
+ 
             if (drawer.classList.contains('active')) {
                 menuIcon.classList.replace('fa-bars', 'fa-times');
             } else {
@@ -374,10 +374,10 @@
             drawer.classList.remove('active');
             const menuIcon = document.getElementById('menu-icon');
             if(menuIcon) menuIcon.classList.replace('fa-times', 'fa-bars');
-  
+ 
             const target = document.getElementById(pId);
             if(target) target.classList.add('active');
-  
+ 
             if(pId === 'carrinho') renderCart();
             if(pId === 'favoritos') renderFavorites();
             if(pId === 'pedidos') renderPedidos();
@@ -402,15 +402,15 @@
             const grid = document.getElementById('products-grid');
             const vitrine = document.getElementById('vitrine');
             const title = document.getElementById('vitrine-title');
-  
+ 
             vitrine.className = 'page px-4 bg-' + cat;
-  
+ 
             const titleMap = {
                 masculino: 'Masculinas',
                 feminino: 'Femininas',
                 infantil: 'Infantis'
             };
-  
+ 
             title.innerText = "Roupas " + (titleMap[cat] || cat.charAt(0).toUpperCase() + cat.slice(1));
             const filtered = allProducts.filter(p => p.cat === cat);
             grid.innerHTML = filtered.map(prod => createProductCard(prod)).join('');
@@ -454,7 +454,7 @@
             const list = document.getElementById('cart-list');
             const totalEl = document.getElementById('cart-total');
             const buyBtn = document.getElementById('buy-btn');
-  
+ 
             if(cart.length === 0) {
                 list.innerHTML = "<p class='text-center text-gray-500'>Carrinho vazio</p>";
                 totalEl.innerText = "Total: R$ 0,00";
@@ -463,19 +463,32 @@
                 if(actions) actions.classList.add('hidden');
                 return;
             }
-  
+ 
             // Sincroniza itens selecionados (remove IDs que não existem mais no carrinho)
             selectedCartIds = selectedCartIds.filter(id => cart.some(item => item.id === id));
-  
+ 
             let total = 0;
             list.innerHTML = cart.map((item, index) => {
                 total += item.price * item.qty;
+
+                // === ALTERAÇÃO SOLICITADA ===
+                // 1. Quando NÃO estiver no modo de seleção múltipla (caixas ocultas):
+                //    - NÃO renderiza nenhum espaço vazio à esquerda → a imagem ocupa todo o espaço da esquerda
+                // 2. Quando estiver no modo de seleção múltipla:
+                //    - Renderiza a checkbox normalmente
+                // 3. Quando NÃO estiver no modo de seleção múltipla:
+                //    - Renderiza o botão de lixeira normalmente
+                // 4. Quando estiver no modo de seleção múltipla:
+                //    - NÃO renderiza nenhum espaço vazio à direita do "+"
+                //    - Os botões (- quantidade +) ocupam o espaço que antes era reservado para a lixeira
                 const checkboxHTML = isMultiSelectMode
                     ? `<input type="checkbox" class="w-5 h-5 accent-[#f7d074] cursor-pointer mt-1" ${selectedCartIds.includes(item.id) ? 'checked' : ''} onchange="toggleCartSelect(${item.id}, this.checked); event.stopImmediatePropagation();">`
-                    : `<div class="w-5 h-5 mt-1"></div>`;
-                const trashHTML = isMultiSelectMode 
-                    ? `<div class="ml-2 w-6"></div>`
-                    : `<i class="fa-solid fa-trash-can ml-2 text-black" onclick="prepareSingleCartDelete(${item.id}); event.stopImmediatePropagation();"></i>`;
+                    : '';
+
+                const trashHTML = !isMultiSelectMode
+                    ? `<i class="fa-solid fa-trash-can ml-2 text-black" onclick="prepareSingleCartDelete(${item.id}); event.stopImmediatePropagation();"></i>`
+                    : '';
+
                 return `
                     <div class="flex items-center gap-4 bg-white p-3 rounded-xl shadow-sm border">
                         ${checkboxHTML}
@@ -493,17 +506,17 @@
                     </div>
                 `;
             }).join('');
-  
+ 
             totalEl.innerText = `Total: R$ ${total.toFixed(2)}`;
             buyBtn.classList.remove('hidden');
-  
+ 
             // Atualiza a barra de ações múltiplas (agora com modo de seleção)
             const actions = document.getElementById('cart-multi-actions');
             actions.classList.remove('hidden');
             const leftEl = document.getElementById('multi-left');
             const delBtn = document.getElementById('multi-delete-btn');
             const delTxt = document.getElementById('delete-btn-text');
-  
+ 
             if (!isMultiSelectMode) {
                 // Botão "Selecionar itens" (aparece quando as caixas estão ocultas)
                 leftEl.innerHTML = `<button onclick="toggleMultiSelectMode(); event.stopImmediatePropagation();" class="bg-black text-[#f4d06f] px-6 py-3 rounded-2xl font-bold uppercase text-sm flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-check-square mr-1"></i>SELECIONAR ITENS</button>`;
