@@ -20,13 +20,15 @@
             -webkit-text-size-adjust: 100%;
         }
         .custom-input {
-            font-size: 16px !important; /* impede zoom automático no teclado */
+            font-size: 16px !important;
+            /* impede zoom automático no teclado */
         }
         /* Cores e Estados */
         .bg-masculino { background-color: #72bcd4 !important; }
         .bg-feminino { background-color: #f497a9 !important; }
         .bg-infantil { background-color: #f7d774 !important; }
         .neon-green { background-color: #f7d774; color: #000 !important; }
+        
         /* Animação de Ícones e Botões */
         .icon-btn {
             color: #000;
@@ -37,6 +39,7 @@
             transform: scale(1.3);
             color: #4b5563;
         }
+        
         /* Categorias Home */
         .cat-card {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -53,6 +56,7 @@
         .cat-card.clicked p {
             color: var(--cat-color) !important;
         }
+        
         /* Pages */
         .page {
             display: none;
@@ -63,6 +67,7 @@
             overflow-y: hidden;
         }
         .page.active { display: block; animation: fadeIn 0.3s; }
+        
         /* SCROLL NA HOME + SOBRE (o que você pediu) */
         #home.page, #vitrine.page, #favoritos.page, #carrinho.page, #sobre.page {
             overflow-y: auto;
@@ -76,6 +81,7 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
         /* Menu Lateral */
         .drawer {
             transition: transform 0.3s ease-in-out;
@@ -83,6 +89,7 @@
             z-index: 40;
         }
         .drawer.active { transform: translateX(0); }
+        
         /* Card de Produto */
         .product-card {
             background: white;
@@ -98,6 +105,7 @@
             border-radius: 15px;
             margin-bottom: 10px;
         }
+        
         /* Botões do Card */
         .btn-cart {
             background: #53565a;
@@ -126,6 +134,7 @@
             background: #000;
             color: #f4d06f;
         }
+        
         /* Bottom Nav */
         .bottom-nav {
             position: fixed;
@@ -146,6 +155,7 @@
             border: none;
             outline: none;
         }
+        
         /* GRID RESPONSIVO PARA CARDS (conforme sua solicitação) */
         #products-grid,
         #fav-list {
@@ -174,8 +184,8 @@
         #theme-switcher {
             position: fixed;
             z-index: 99999;
-            width: 80px;
-            height: 80px;
+            width: 36px; /* Reduzido em 55% */
+            height: 36px; /* Reduzido em 55% */
             right: 20px;
             top: 120px;
             user-select: none;
@@ -199,11 +209,12 @@
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
         }
         #mode-btn svg {
-            width: 48px;
-            height: 48px;
+            width: 22px; /* Ajuste proporcional ao novo tamanho */
+            height: 22px;
         }
 
         /* === OVERRIDES DOS 3 MODOS (sem mexer no resto do código) === */
+        
         /* Modo Escuro (preto) */
         body.theme-dark {
             background-color: #000000 !important;
@@ -245,6 +256,19 @@
             background: #222222 !important;
             color: #f4d06f !important;
         }
+        /* Customizações Modo Escuro pedidas */
+        body.theme-dark #pedidos-msg.text-red-500 {
+            color: #ef4444 !important; /* Mantém vermelho */
+        }
+        body.theme-dark #cart-count {
+            background-color: #72bcd4 !important; /* Azul Masculino */
+            color: #000000 !important;
+        }
+        body.theme-dark .btn-fav, 
+        body.theme-dark .btn-fav i, 
+        body.theme-dark .btn-fav span {
+            color: #000000 !important; /* Texto e icone preto */
+        }
 
         /* Modo Cinza (dim) */
         body.theme-dim {
@@ -261,10 +285,6 @@
         body.theme-dim #cart-confirm-modal > div {
             background-color: #808080 !important;
             border-color: #666666 !important;
-        }
-        body.theme-dim .custom-input {
-            background: #808080 !important;
-            color: #ffffff !important;
         }
         body.theme-dim #cart-total {
             background-color: #a0a0a0 !important;
@@ -285,7 +305,45 @@
         }
         body.theme-dim .btn-cart.active {
             background: #a0a0a0 !important;
-            color: #111111 !important;
+            color: #ffffff !important;
+        }
+        
+        /* Customizações Modo Cinza pedidas */
+        body.theme-dim .custom-input {
+            background: #999999 !important; /* Cinza mais claro */
+            color: #ffffff !important;
+        }
+        body.theme-dim .custom-input::placeholder {
+            color: #ffffff !important;
+            opacity: 1;
+        }
+        body.theme-dim #pedidos-msg.text-red-500 {
+            color: #ef4444 !important; /* Mantém vermelho */
+        }
+        body.theme-dim #cart-count {
+            background-color: #72bcd4 !important; /* Azul Masculino */
+            color: #000000 !important;
+        }
+        body.theme-dim .btn-fav, 
+        body.theme-dim .btn-fav i, 
+        body.theme-dim .btn-fav span {
+            color: #000000 !important; /* Texto e icone preto */
+        }
+        body.theme-dim .btn-cart {
+            color: #ffffff !important; /* Fontes brancas no botão de carrinho */
+        }
+        
+        /* Cores Azul Masculino (#72bcd4) nos ícones/botões do Carrinho no Modo Cinza */
+        body.theme-dim input[type="checkbox"] {
+            accent-color: #72bcd4 !important;
+        }
+        body.theme-dim #cart-list .fa-circle-plus,
+        body.theme-dim #cart-list .fa-trash-can,
+        body.theme-dim #multi-left button,
+        body.theme-dim #multi-left button i,
+        body.theme-dim #multi-delete-btn,
+        body.theme-dim #multi-delete-btn i {
+            color: #72bcd4 !important;
         }
     </style>
 </head>
@@ -351,8 +409,6 @@
         </section>
         <section id="carrinho" class="page px-4">
             <h2 class="text-center font-bold text-xl mb-6 uppercase">Carrinho</h2>
-       
-            <!-- NOVO: Área de ações para múltiplos itens selecionados (com modo de seleção) -->
             <div id="cart-multi-actions" class="hidden mb-4 flex items-center justify-between bg-white p-3 rounded-2xl shadow-sm border">
                 <div id="multi-left" class="font-bold text-sm text-gray-600"></div>
                 <button id="multi-delete-btn" onclick="prepareMultiCartDelete()" class="bg-black text-[#f4d06f] px-6 py-3 rounded-2xl font-bold uppercase text-sm flex items-center gap-2 hidden whitespace-nowrap">
@@ -374,9 +430,7 @@
             <div class="pb-20">
                 <p class="text-gray-800">
                     <strong>RDM Moda & Estilo: Sua Loja em Manaus</strong><br><br>
-                    Bem-vindo à RDM Moda & Estilo! Criada pela empresária Cio Dira, nossa loja traz o melhor do varejo de alta qualidade para a palma da sua mão.
-                    Com este app Android, você garante looks masculinos, femininos e infantis com praticidade total.
-                    Navegue pelas categorias, escolha seus favoritos e receba no conforto da sua casa.
+                    Bem-vindo à RDM Moda & Estilo! Criada pela empresária Cio Dira, nossa loja traz o melhor do varejo de alta qualidade para a palma da sua mão. Com este app Android, você garante looks masculinos, femininos e infantis com praticidade total. Navegue pelas categorias, escolha seus favoritos e receba no conforto da sua casa.
                 </p>
             </div>
         </section>
@@ -388,12 +442,10 @@
         <i class="fa-solid fa-calendar-days text-3xl icon-btn" onclick="showPage('pedidos')"></i>
     </nav>
 
-    <!-- BOTÃO FLUTUANTE DE MODOS (arrastável e com limites) -->
     <div id="theme-switcher">
         <button id="mode-btn"></button>
     </div>
 
-    <!-- MODAL DE CONFIRMAÇÃO PARA DESFAVORITAR (só aparece na aba Favoritos) -->
     <div id="confirm-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
         <div class="bg-white rounded-3xl p-6 max-w-xs w-full mx-4 text-center shadow-2xl">
             <p class="font-bold text-lg mb-6">Tem certeza que deseja desfavoritar este item?</p>
@@ -403,7 +455,6 @@
             </div>
         </div>
     </div>
-    <!-- NOVO MODAL DE CONFIRMAÇÃO PARA EXCLUIR ITEM / ITENS DO CARRINHO -->
     <div id="cart-confirm-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
         <div class="bg-white rounded-3xl p-6 max-w-xs w-full mx-4 text-center shadow-2xl">
             <p id="cart-confirm-text" class="font-bold text-lg mb-6"></p>
@@ -413,6 +464,7 @@
             </div>
         </div>
     </div>
+    
     <script>
         // Estado da Aplicação
         let cart = [];
@@ -505,19 +557,17 @@
                 e.preventDefault();
                 let clientX = (e.type.includes('touch') ? e.touches[0].clientX : e.clientX);
                 let clientY = (e.type.includes('touch') ? e.touches[0].clientY : e.clientY);
-
                 pos1 = pos3 - clientX;
                 pos2 = pos4 - clientY;
                 pos3 = clientX;
                 pos4 = clientY;
-
                 let newTop = el.offsetTop - pos2;
                 let newLeft = el.offsetLeft - pos1;
-
+                
                 // Limites: não ultrapassa header nem footer
                 const headerHeight = 90;
                 const footerHeight = 100;
-                const btnSize = 80;
+                const btnSize = 36; // Tamanho atualizado de acordo com sua nova regra
                 const minTop = headerHeight + 20;
                 const maxTop = window.innerHeight - footerHeight - btnSize - 20;
                 const minLeft = 20;
@@ -525,7 +575,6 @@
 
                 newTop = Math.max(minTop, Math.min(maxTop, newTop));
                 newLeft = Math.max(minLeft, Math.min(maxLeft, newLeft));
-
                 el.style.top = `${newTop}px`;
                 el.style.left = `${newLeft}px`;
                 el.style.right = 'auto';
