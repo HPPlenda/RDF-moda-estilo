@@ -26,7 +26,7 @@
         .bg-masculino { background-color: #72bcd4 !important; }
         .bg-feminino { background-color: #f497a9 !important; }
         .bg-infantil { background-color: #f7d774 !important; }
-        .neon-green { background-color: #39FF14; }
+        .neon-green { background-color: #f7d774; color: #000 !important; }
         /* Animação de Ícones e Botões */
         .icon-btn {
             color: #000;
@@ -173,7 +173,7 @@
 </head>
 <body>
     <div id="drawer" class="fixed inset-0 drawer flex">
-        <div class="w-4/5 h-full bg-gray-300 px-6 pt-24 pb-24 shadow-2xl overflow-y-auto">
+        <div class="w-4/5 h-full bg-white px-6 pt-24 pb-24 shadow-2xl overflow-y-auto">
             <h2 class="font-bold text-lg mb-8 cursor-pointer uppercase" onclick="showPage('sobre')">O QUE É A RDM MODA & ESTILO?</h2>
             <ul class="space-y-6 text-xl font-bold">
                 <li onclick="loadVitrine('masculino')" class="cursor-pointer">MASCULINO</li>
@@ -189,14 +189,14 @@
         <h1 class="font-bold text-lg">RDM Moda & Estilo</h1>
         <div class="relative">
             <i class="fa-solid fa-cart-shopping text-2xl icon-btn" onclick="showPage('carrinho')"></i>
-            <span id="cart-count" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+            <span id="cart-count" class="hidden absolute -top-2 -right-2 bg-[#f7d774] text-black text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
         </div>
     </header>
     <main>
         <section id="home" class="page active text-center px-[13px]">
             <img src="RDM moda & estilo.svg" alt="Logo RDM" class="logo-img mb-1 w-full max-w-xs mx-auto">
             <input id="search-input" type="text" placeholder="Buscar roupas..." class="custom-input mb-1">
-       
+     
             <div class="grid grid-cols-3 gap-3">
                 <div class="cat-card bg-[#72bcd4] p-4 rounded-xl flex flex-col items-center" data-color="#72bcd4" data-cat="masculino">
                     <i class="fa-solid fa-shirt text-3xl mb-2"></i>
@@ -234,6 +234,16 @@
         </section>
         <section id="carrinho" class="page px-4">
             <h2 class="text-center font-bold text-xl mb-6 uppercase">Carrinho</h2>
+            
+            <!-- NOVO: Área de ações para múltiplos itens selecionados -->
+            <div id="cart-multi-actions" class="hidden mb-4 flex items-center justify-between bg-white p-3 rounded-2xl shadow-sm border">
+                <span id="selected-count" class="font-bold text-sm text-gray-600"></span>
+                <button onclick="prepareMultiCartDelete()" class="bg-black text-[#f4d06f] px-6 py-3 rounded-2xl font-bold uppercase text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-trash-can"></i>
+                    Apagar selecionados
+                </button>
+            </div>
+
             <div id="cart-list" class="space-y-4 mb-8"></div>
             <div id="cart-total" class="bg-gray-300 p-4 rounded-xl text-center font-bold text-lg mb-4 uppercase">Total: R$ 0,00</div>
             <button id="buy-btn" class="hidden neon-green w-full py-5 rounded-3xl font-bold text-2xl uppercase" onclick="finalizarCompra()">Adquirir Agora!</button>
@@ -271,11 +281,25 @@
             </div>
         </div>
     </div>
+
+    <!-- NOVO MODAL DE CONFIRMAÇÃO PARA EXCLUIR ITEM / ITENS DO CARRINHO -->
+    <div id="cart-confirm-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
+        <div class="bg-white rounded-3xl p-6 max-w-xs w-full mx-4 text-center shadow-2xl">
+            <p id="cart-confirm-text" class="font-bold text-lg mb-6"></p>
+            <div class="flex gap-4">
+                <button onclick="confirmCartDelete(true)" class="flex-1 bg-black text-[#f4d06f] py-4 rounded-2xl font-bold uppercase">SIM</button>
+                <button onclick="confirmCartDelete(false)" class="flex-1 bg-gray-300 py-4 rounded-2xl font-bold uppercase">NÃO</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Estado da Aplicação
         let cart = [];
         let favorites = [];
         let pendingUnfavId = null;
+        let selectedCartIds = [];
+        let pendingCartDeleteIds = [];
         let user = JSON.parse(localStorage.getItem('user')) || null;
         const allProducts = [
             { id: 1, name: "Camisa Casual", price: 49.99, cat: "masculino" },
@@ -297,18 +321,16 @@
             { id: 17, name: "Vestidinho Bebê", price: 35.90, cat: "infantil" },
             { id: 18, name: "Shorts Kids", price: 25.99, cat: "infantil" }
         ];
-
         function initSearchInput() {
             const input = document.getElementById('search-input');
             if (!input) return;
-        
+      
             input.addEventListener('focus', function() {
                 // Espera o teclado abrir e posiciona o input no centro (fica "parado" onde começou a digitar)
                 setTimeout(() => {
                     this.scrollIntoView({ behavior: "smooth", block: "center" });
                 }, 300);
             });
-
             // NOVO: Pesquisa funcional ligada a TODAS as roupas (masculino + feminino + infantil)
             input.addEventListener('keyup', function(e) {
                 if (e.key === 'Enter') {
@@ -316,7 +338,6 @@
                 }
             });
         }
-
         function performSearch() {
             const input = document.getElementById('search-input');
             if (!input) return;
@@ -329,10 +350,8 @@
             const grid = document.getElementById('products-grid');
             const vitrine = document.getElementById('vitrine');
             const title = document.getElementById('vitrine-title');
-
             vitrine.className = 'page px-4';
             title.innerText = `Resultados para "${input.value}"`;
-
             if (filtered.length === 0) {
                 grid.innerHTML = `<p class="col-span-full text-center text-gray-500 py-12">Nenhum produto encontrado</p>`;
             } else {
@@ -340,12 +359,11 @@
             }
             showPage('vitrine');
         }
-
         function toggleMenu() {
             const drawer = document.getElementById('drawer');
             const menuIcon = document.getElementById('menu-icon');
             drawer.classList.toggle('active');
-       
+     
             if (drawer.classList.contains('active')) {
                 menuIcon.classList.replace('fa-bars', 'fa-times');
             } else {
@@ -358,10 +376,10 @@
             drawer.classList.remove('active');
             const menuIcon = document.getElementById('menu-icon');
             if(menuIcon) menuIcon.classList.replace('fa-times', 'fa-bars');
-       
+     
             const target = document.getElementById(pId);
             if(target) target.classList.add('active');
-       
+     
             if(pId === 'carrinho') renderCart();
             if(pId === 'favoritos') renderFavorites();
             if(pId === 'pedidos') renderPedidos();
@@ -386,15 +404,15 @@
             const grid = document.getElementById('products-grid');
             const vitrine = document.getElementById('vitrine');
             const title = document.getElementById('vitrine-title');
-       
+     
             vitrine.className = 'page px-4 bg-' + cat;
-       
+     
             const titleMap = {
                 masculino: 'Masculinas',
                 feminino: 'Femininas',
                 infantil: 'Infantis'
             };
-       
+     
             title.innerText = "Roupas " + (titleMap[cat] || cat.charAt(0).toUpperCase() + cat.slice(1));
             const filtered = allProducts.filter(p => p.cat === cat);
             grid.innerHTML = filtered.map(prod => createProductCard(prod)).join('');
@@ -438,35 +456,46 @@
             const list = document.getElementById('cart-list');
             const totalEl = document.getElementById('cart-total');
             const buyBtn = document.getElementById('buy-btn');
-       
+     
             if(cart.length === 0) {
                 list.innerHTML = "<p class='text-center text-gray-500'>Carrinho vazio</p>";
                 totalEl.innerText = "Total: R$ 0,00";
                 buyBtn.classList.add('hidden');
+                updateMultiActionsUI();
                 return;
             }
-       
+     
+            // Sincroniza itens selecionados (remove IDs que não existem mais no carrinho)
+            selectedCartIds = selectedCartIds.filter(id => cart.some(item => item.id === id));
+     
             let total = 0;
             list.innerHTML = cart.map((item, index) => {
                 total += item.price * item.qty;
                 return `
                     <div class="flex items-center gap-4 bg-white p-3 rounded-xl shadow-sm border">
+                        <input type="checkbox" 
+                               class="w-5 h-5 accent-[#f7d774] cursor-pointer mt-1"
+                               ${selectedCartIds.includes(item.id) ? 'checked' : ''}
+                               onchange="toggleCartSelect(${item.id}, this.checked); event.stopImmediatePropagation();">
                         <img src="RDM moda & estilo.svg" alt="Produto" class="w-16 h-16 rounded">
                         <div class="flex-1 font-bold text-xs uppercase">
                             ${item.name}<br>
-                            <span class="text-blue-500">R$ ${(item.price * item.qty).toFixed(2)}</span>
+                            <span class="text-black">R$ ${(item.price * item.qty).toFixed(2)}</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <i class="fa-solid fa-circle-minus text-xl text-gray-400" onclick="changeQty(${index}, -1); event.stopImmediatePropagation();"></i>
                             <span class="font-bold">${item.qty}</span>
-                            <i class="fa-solid fa-circle-plus text-xl text-blue-500" onclick="changeQty(${index}, 1); event.stopImmediatePropagation();"></i>
-                            <i class="fa-solid fa-trash-can ml-2 text-red-400" onclick="removeFromCart(${index}); event.stopImmediatePropagation();"></i>
+                            <i class="fa-solid fa-circle-plus text-xl text-[#f7d774]" onclick="changeQty(${index}, 1); event.stopImmediatePropagation();"></i>
+                            <i class="fa-solid fa-trash-can ml-2 text-black" onclick="prepareSingleCartDelete(${item.id}); event.stopImmediatePropagation();"></i>
                         </div>
                     </div>
                 `;
             }).join('');
+     
             totalEl.innerText = `Total: R$ ${total.toFixed(2)}`;
             buyBtn.classList.remove('hidden');
+     
+            updateMultiActionsUI();
         }
         function changeQty(index, delta) {
             if(cart[index].qty + delta > 0) {
@@ -474,12 +503,59 @@
                 renderCart();
             }
         }
-        function removeFromCart(index) {
-            const removedId = cart[index].id;
-            cart.splice(index, 1);
+        // NOVO: Funções de seleção múltipla e confirmação de exclusão
+        function toggleCartSelect(id, checked) {
+            if (checked) {
+                if (!selectedCartIds.includes(id)) selectedCartIds.push(id);
+            } else {
+                selectedCartIds = selectedCartIds.filter(i => i !== id);
+            }
+            updateMultiActionsUI();
+        }
+        function updateMultiActionsUI() {
+            const actions = document.getElementById('cart-multi-actions');
+            if (!actions) return;
+            const countSpan = document.getElementById('selected-count');
+            if (selectedCartIds.length > 0) {
+                actions.classList.remove('hidden');
+                countSpan.innerText = `${selectedCartIds.length} selecionado${selectedCartIds.length > 1 ? 's' : ''}`;
+            } else {
+                actions.classList.add('hidden');
+            }
+        }
+        function prepareSingleCartDelete(id) {
+            pendingCartDeleteIds = [id];
+            showCartConfirmModal(false);
+        }
+        function prepareMultiCartDelete() {
+            if (selectedCartIds.length === 0) return;
+            pendingCartDeleteIds = [...selectedCartIds];
+            showCartConfirmModal(true);
+        }
+        function showCartConfirmModal(isMulti) {
+            const modal = document.getElementById('cart-confirm-modal');
+            const textEl = document.getElementById('cart-confirm-text');
+            if (isMulti) {
+                textEl.innerText = 'Tem certeza que deseja apagar todos esses itens do carrinho?';
+            } else {
+                textEl.innerText = 'Tem certeza que deseja excluir esse item do carrinho?';
+            }
+            modal.classList.remove('hidden');
+        }
+        function confirmCartDelete(confirmed) {
+            const modal = document.getElementById('cart-confirm-modal');
+            modal.classList.add('hidden');
+            if (!confirmed || pendingCartDeleteIds.length === 0) {
+                pendingCartDeleteIds = [];
+                return;
+            }
+            const removedIds = [...pendingCartDeleteIds];
+            cart = cart.filter(item => !removedIds.includes(item.id));
+            selectedCartIds = selectedCartIds.filter(id => !removedIds.includes(id));
+            pendingCartDeleteIds = [];
             renderCart();
             updateCartUI();
-            updateProductButtons(removedId);
+            removedIds.forEach(id => updateProductButtons(id));
         }
         function toggleFav(id) {
             const index = favorites.findIndex(p => p.id === id);
@@ -558,6 +634,7 @@
             if(cart.length > 0) {
                 alert("Pedido realizado com sucesso!");
                 cart = [];
+                selectedCartIds = [];
                 updateCartUI();
                 showPage('pedidos');
             } else {
