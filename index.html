@@ -6,9 +6,10 @@
     <title>RDM Moda & Estilo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             background: #fff;
             overflow-x: hidden;
@@ -130,6 +131,24 @@
             border: none;
             outline: none;
         }
+
+        /* GRID RESPONSIVO PARA CARDS (conforme sua solicitação) */
+        #products-grid,
+        #fav-list {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+        @media (min-width: 388px) {
+            #products-grid,
+            #fav-list {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        @media (min-width: 640px) {
+            #products-grid,
+            #fav-list {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
     </style>
 </head>
 <body>
@@ -154,9 +173,9 @@
         </div>
     </header>
     <main>
-        <section id="home" class="page active px-4 text-center">
-            <img src="RDM moda & estilo.svg" alt="Logo RDM" class="logo-img mb-4 w-full max-w-xs mx-auto">
-            <input id="search-input" type="text" placeholder="Buscar roupas..." class="custom-input mb-8">
+        <section id="home" class="page active text-center">
+            <img src="RDM moda & estilo.svg" alt="Logo RDM" class="logo-img mb-1 w-full max-w-xs mx-auto">
+            <input id="search-input" type="text" placeholder="Buscar roupas..." class="custom-input mb-1">
          
             <div class="grid grid-cols-3 gap-3">
                 <div onclick="loadVitrine('masculino')" class="cat-card bg-[#72bcd4] p-4 rounded-xl flex flex-col items-center" data-color="#72bcd4">
@@ -175,7 +194,7 @@
         </section>
         <section id="vitrine" class="page px-4">
             <h2 id="vitrine-title" class="text-center font-bold text-xl mb-4 uppercase">Roupas</h2>
-            <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-6 pb-10"></div>
+            <div id="products-grid" class="grid grid-cols-1 gap-6 pb-10"></div>
         </section>
         <section id="favoritos" class="page px-4">
             <h2 class="text-center font-bold text-xl mb-6 uppercase">Meus Favoritos</h2>
@@ -222,10 +241,23 @@
         <i class="fa-solid fa-user text-3xl icon-btn" onclick="showPage('cadastro')"></i>
         <i class="fa-solid fa-calendar-days text-3xl icon-btn" onclick="showPage('pedidos')"></i>
     </nav>
+
+    <!-- MODAL DE CONFIRMAÇÃO PARA DESFAVORITAR (só aparece na aba Favoritos) -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
+        <div class="bg-white rounded-3xl p-6 max-w-xs w-full mx-4 text-center shadow-2xl">
+            <p class="font-bold text-lg mb-6">Tem certeza que deseja desfavoritar este item?</p>
+            <div class="flex gap-4">
+                <button onclick="confirmUnfavorite(true)" class="flex-1 bg-red-500 text-white py-4 rounded-2xl font-bold uppercase">SIM</button>
+                <button onclick="confirmUnfavorite(false)" class="flex-1 bg-gray-300 py-4 rounded-2xl font-bold uppercase">NÃO</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Estado da Aplicação
         let cart = [];
         let favorites = [];
+        let pendingUnfavId = null;
         let user = JSON.parse(localStorage.getItem('user')) || null;
         const allProducts = [
             { id: 1, name: "Camisa Casual", price: 49.99, cat: "masculino" },
@@ -397,6 +429,15 @@
         }
         function toggleFav(id) {
             const index = favorites.findIndex(p => p.id === id);
+            const isOnFavoritesPage = document.getElementById('favoritos').classList.contains('active');
+
+            // Se estiver na aba Favoritos e for desfavoritar → mostra confirmação
+            if (index > -1 && isOnFavoritesPage) {
+                pendingUnfavId = id;
+                showConfirmModal();
+                return;
+            }
+
             if(index > -1) {
                 favorites.splice(index, 1);
             } else {
@@ -404,6 +445,32 @@
                 favorites.push(prod);
             }
             updateProductButtons(id);
+
+            // Se estava na aba favoritos, atualiza a lista após a ação
+            if (isOnFavoritesPage) {
+                renderFavorites();
+            }
+        }
+
+        // MODAL DE CONFIRMAÇÃO (nova funcionalidade solicitada)
+        function showConfirmModal() {
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.remove('hidden');
+        }
+
+        function confirmUnfavorite(confirmed) {
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.add('hidden');
+
+            if (confirmed && pendingUnfavId !== null) {
+                const index = favorites.findIndex(p => p.id === pendingUnfavId);
+                if (index > -1) {
+                    favorites.splice(index, 1);
+                }
+                updateProductButtons(pendingUnfavId);
+                renderFavorites();
+            }
+            pendingUnfavId = null;
         }
         function renderFavorites() {
             const list = document.getElementById('fav-list');
