@@ -96,21 +96,33 @@
             margin-bottom: 10px;
         }
         /* Botões do Card */
-        .btn-cart { 
-            background: #53565a; 
-            color: white; 
+        .btn-cart {
+            background: #53565a;
+            color: white;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: 0.3s;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+        .btn-cart.active { background: white; color: #53565a; border: 2px solid #53565a; }
+        .btn-fav { 
+            background: #f4d06f; 
+            color: black; 
             width: 100%; 
             padding: 10px; 
             border-radius: 8px; 
             font-weight: bold; 
-            margin-top: 10px; 
-            transition: 0.3s; 
-            white-space: nowrap; 
-            font-size: 14px; 
+            margin-top: 8px; 
+            transition: 0.4s; 
         }
-        .btn-cart.active { background: white; color: #53565a; border: 2px solid #53565a; }
-        .btn-fav { background: #f4d06f; color: black; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 8px; transition: 0.3s; }
-        .btn-fav.active { background: #000; color: #f4d06f; }
+        .btn-fav.active { 
+            background: #000; 
+            color: #f4d06f; 
+        }
         /* Bottom Nav */
         .bottom-nav {
             position: fixed;
@@ -131,7 +143,6 @@
             border: none;
             outline: none;
         }
-
         /* GRID RESPONSIVO PARA CARDS (conforme sua solicitação) */
         #products-grid,
         #fav-list {
@@ -176,7 +187,7 @@
         <section id="home" class="page active text-center">
             <img src="RDM moda & estilo.svg" alt="Logo RDM" class="logo-img mb-1 w-full max-w-xs mx-auto">
             <input id="search-input" type="text" placeholder="Buscar roupas..." class="custom-input mb-1">
-         
+        
             <div class="grid grid-cols-3 gap-3">
                 <div onclick="loadVitrine('masculino')" class="cat-card bg-[#72bcd4] p-4 rounded-xl flex flex-col items-center" data-color="#72bcd4">
                     <i class="fa-solid fa-shirt text-3xl mb-2"></i>
@@ -241,18 +252,16 @@
         <i class="fa-solid fa-user text-3xl icon-btn" onclick="showPage('cadastro')"></i>
         <i class="fa-solid fa-calendar-days text-3xl icon-btn" onclick="showPage('pedidos')"></i>
     </nav>
-
     <!-- MODAL DE CONFIRMAÇÃO PARA DESFAVORITAR (só aparece na aba Favoritos) -->
     <div id="confirm-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
         <div class="bg-white rounded-3xl p-6 max-w-xs w-full mx-4 text-center shadow-2xl">
             <p class="font-bold text-lg mb-6">Tem certeza que deseja desfavoritar este item?</p>
             <div class="flex gap-4">
-                <button onclick="confirmUnfavorite(true)" class="flex-1 bg-red-500 text-white py-4 rounded-2xl font-bold uppercase">SIM</button>
+                <button onclick="confirmUnfavorite(true)" class="flex-1 bg-black text-[#f4d06f] py-4 rounded-2xl font-bold uppercase">SIM</button>
                 <button onclick="confirmUnfavorite(false)" class="flex-1 bg-gray-300 py-4 rounded-2xl font-bold uppercase">NÃO</button>
             </div>
         </div>
     </div>
-
     <script>
         // Estado da Aplicação
         let cart = [];
@@ -283,7 +292,7 @@
         function initSearchInput() {
             const input = document.getElementById('search-input');
             if (!input) return;
-          
+         
             input.addEventListener('focus', function() {
                 // Espera o teclado abrir e posiciona o input no centro (fica "parado" onde começou a digitar)
                 setTimeout(() => {
@@ -295,7 +304,7 @@
             const drawer = document.getElementById('drawer');
             const menuIcon = document.getElementById('menu-icon');
             drawer.classList.toggle('active');
-         
+        
             if (drawer.classList.contains('active')) {
                 menuIcon.classList.replace('fa-bars', 'fa-times');
             } else {
@@ -308,10 +317,10 @@
             drawer.classList.remove('active');
             const menuIcon = document.getElementById('menu-icon');
             if(menuIcon) menuIcon.classList.replace('fa-times', 'fa-bars');
-         
+        
             const target = document.getElementById(pId);
             if(target) target.classList.add('active');
-         
+        
             if(pId === 'carrinho') renderCart();
             if(pId === 'favoritos') renderFavorites();
             if(pId === 'pedidos') renderPedidos();
@@ -332,15 +341,15 @@
             const grid = document.getElementById('products-grid');
             const vitrine = document.getElementById('vitrine');
             const title = document.getElementById('vitrine-title');
-         
+        
             vitrine.className = 'page px-4 bg-' + cat;
-         
+        
             const titleMap = {
                 masculino: 'Masculinas',
                 feminino: 'Femininas',
                 infantil: 'Infantis'
             };
-         
+        
             title.innerText = "Roupas " + (titleMap[cat] || cat.charAt(0).toUpperCase() + cat.slice(1));
             const filtered = allProducts.filter(p => p.cat === cat);
             grid.innerHTML = filtered.map(prod => createProductCard(prod)).join('');
@@ -384,14 +393,14 @@
             const list = document.getElementById('cart-list');
             const totalEl = document.getElementById('cart-total');
             const buyBtn = document.getElementById('buy-btn');
-         
+        
             if(cart.length === 0) {
                 list.innerHTML = "<p class='text-center text-gray-500'>Carrinho vazio</p>";
                 totalEl.innerText = "Total: R$ 0,00";
                 buyBtn.classList.add('hidden');
                 return;
             }
-         
+        
             let total = 0;
             list.innerHTML = cart.map((item, index) => {
                 total += item.price * item.qty;
@@ -430,14 +439,25 @@
         function toggleFav(id) {
             const index = favorites.findIndex(p => p.id === id);
             const isOnFavoritesPage = document.getElementById('favoritos').classList.contains('active');
-
             // Se estiver na aba Favoritos e for desfavoritar → mostra confirmação
             if (index > -1 && isOnFavoritesPage) {
                 pendingUnfavId = id;
-                showConfirmModal();
+                // Animação imediata do botão (preto → amarelo e amarelo → preto) antes de mostrar o modal
+                const cards = document.querySelectorAll(`.product-card[data-prod-id="${id}"]`);
+                cards.forEach(card => {
+                    const favBtn = card.querySelector('.btn-fav');
+                    if (favBtn) {
+                        favBtn.classList.remove('active');
+                        const span = favBtn.querySelector('span');
+                        if (span) span.innerText = 'Favoritar';
+                    }
+                });
+                // Clique só ativa o modal após 0.4s (tempo da animação)
+                setTimeout(() => {
+                    showConfirmModal();
+                }, 400);
                 return;
             }
-
             if(index > -1) {
                 favorites.splice(index, 1);
             } else {
@@ -445,23 +465,19 @@
                 favorites.push(prod);
             }
             updateProductButtons(id);
-
             // Se estava na aba favoritos, atualiza a lista após a ação
             if (isOnFavoritesPage) {
                 renderFavorites();
             }
         }
-
         // MODAL DE CONFIRMAÇÃO (nova funcionalidade solicitada)
         function showConfirmModal() {
             const modal = document.getElementById('confirm-modal');
             modal.classList.remove('hidden');
         }
-
         function confirmUnfavorite(confirmed) {
             const modal = document.getElementById('confirm-modal');
             modal.classList.add('hidden');
-
             if (confirmed && pendingUnfavId !== null) {
                 const index = favorites.findIndex(p => p.id === pendingUnfavId);
                 if (index > -1) {
@@ -469,6 +485,18 @@
                 }
                 updateProductButtons(pendingUnfavId);
                 renderFavorites();
+            } else if (pendingUnfavId !== null) {
+                // Se o usuário clicar em NÃO, volta o botão para o estado original (com animação reversa)
+                const id = pendingUnfavId;
+                const cards = document.querySelectorAll(`.product-card[data-prod-id="${id}"]`);
+                cards.forEach(card => {
+                    const favBtn = card.querySelector('.btn-fav');
+                    if (favBtn) {
+                        favBtn.classList.add('active');
+                        const span = favBtn.querySelector('span');
+                        if (span) span.innerText = 'Favoritado';
+                    }
+                });
             }
             pendingUnfavId = null;
         }
