@@ -169,6 +169,124 @@
                 grid-template-columns: repeat(4, minmax(0, 1fr));
             }
         }
+
+        /* === BOTÃO DE MODOS (flutuante + arrastável) === */
+        #theme-switcher {
+            position: fixed;
+            z-index: 99999;
+            width: 80px;
+            height: 80px;
+            right: 20px;
+            top: 120px;
+            user-select: none;
+            touch-action: none;
+        }
+        #mode-btn {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        #mode-btn:hover {
+            transform: scale(1.12);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+        }
+        #mode-btn svg {
+            width: 48px;
+            height: 48px;
+        }
+
+        /* === OVERRIDES DOS 3 MODOS (sem mexer no resto do código) === */
+        /* Modo Escuro (preto) */
+        body.theme-dark {
+            background-color: #000000 !important;
+        }
+        body.theme-dark header,
+        body.theme-dark .bottom-nav,
+        body.theme-dark .product-card,
+        body.theme-dark #cart-list > div,
+        body.theme-dark #cart-multi-actions,
+        body.theme-dark #cart-total,
+        body.theme-dark .drawer > div:first-child,
+        body.theme-dark #confirm-modal > div,
+        body.theme-dark #cart-confirm-modal > div {
+            background-color: #111111 !important;
+            border-color: #333333 !important;
+        }
+        body.theme-dark .custom-input {
+            background: #333333 !important;
+            color: #ffffff !important;
+        }
+        body.theme-dark .cat-card.clicked {
+            background-color: #222222 !important;
+        }
+        body.theme-dark h1,
+        body.theme-dark h2,
+        body.theme-dark h3,
+        body.theme-dark p,
+        body.theme-dark span,
+        body.theme-dark .font-bold,
+        body.theme-dark i.fa-solid,
+        body.theme-dark .icon-btn {
+            color: #ffffff !important;
+        }
+        body.theme-dark .text-gray-500,
+        body.theme-dark .text-gray-600 {
+            color: #bbbbbb !important;
+        }
+        body.theme-dark .btn-cart.active {
+            background: #222222 !important;
+            color: #f4d06f !important;
+        }
+
+        /* Modo Cinza (dim) */
+        body.theme-dim {
+            background-color: #808080 !important;
+        }
+        body.theme-dim header,
+        body.theme-dim .bottom-nav,
+        body.theme-dim .product-card,
+        body.theme-dim #cart-list > div,
+        body.theme-dim #cart-multi-actions,
+        body.theme-dim #cart-total,
+        body.theme-dim .drawer > div:first-child,
+        body.theme-dim #confirm-modal > div,
+        body.theme-dim #cart-confirm-modal > div {
+            background-color: #808080 !important;
+            border-color: #666666 !important;
+        }
+        body.theme-dim .custom-input {
+            background: #808080 !important;
+            color: #ffffff !important;
+        }
+        body.theme-dim #cart-total {
+            background-color: #a0a0a0 !important;
+        }
+        body.theme-dim h1,
+        body.theme-dim h2,
+        body.theme-dim h3,
+        body.theme-dim p,
+        body.theme-dim span,
+        body.theme-dim .font-bold,
+        body.theme-dim i.fa-solid,
+        body.theme-dim .icon-btn {
+            color: #ffffff !important;
+        }
+        body.theme-dim .text-gray-500,
+        body.theme-dim .text-gray-600 {
+            color: #e0e0e0 !important;
+        }
+        body.theme-dim .btn-cart.active {
+            background: #a0a0a0 !important;
+            color: #111111 !important;
+        }
     </style>
 </head>
 <body>
@@ -196,7 +314,6 @@
         <section id="home" class="page active text-center px-[13px]">
             <img src="RDM moda & estilo.svg" alt="Logo RDM" class="logo-img mb-1 w-full max-w-xs mx-auto">
             <input id="search-input" type="text" placeholder="Buscar roupas..." class="custom-input mb-1">
- 
             <div class="grid grid-cols-3 gap-3">
                 <div class="cat-card bg-[#72bcd4] p-4 rounded-xl flex flex-col items-center" data-color="#72bcd4" data-cat="masculino">
                     <i class="fa-solid fa-shirt text-3xl mb-2"></i>
@@ -234,7 +351,7 @@
         </section>
         <section id="carrinho" class="page px-4">
             <h2 class="text-center font-bold text-xl mb-6 uppercase">Carrinho</h2>
-        
+       
             <!-- NOVO: Área de ações para múltiplos itens selecionados (com modo de seleção) -->
             <div id="cart-multi-actions" class="hidden mb-4 flex items-center justify-between bg-white p-3 rounded-2xl shadow-sm border">
                 <div id="multi-left" class="font-bold text-sm text-gray-600"></div>
@@ -270,6 +387,12 @@
         <i class="fa-solid fa-user text-3xl icon-btn" onclick="showPage('cadastro')"></i>
         <i class="fa-solid fa-calendar-days text-3xl icon-btn" onclick="showPage('pedidos')"></i>
     </nav>
+
+    <!-- BOTÃO FLUTUANTE DE MODOS (arrastável e com limites) -->
+    <div id="theme-switcher">
+        <button id="mode-btn"></button>
+    </div>
+
     <!-- MODAL DE CONFIRMAÇÃO PARA DESFAVORITAR (só aparece na aba Favoritos) -->
     <div id="confirm-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
         <div class="bg-white rounded-3xl p-6 max-w-xs w-full mx-4 text-center shadow-2xl">
@@ -319,17 +442,112 @@
             { id: 17, name: "Vestidinho Bebê", price: 35.90, cat: "infantil" },
             { id: 18, name: "Shorts Kids", price: 25.99, cat: "infantil" }
         ];
+
+        // === NOVO: FUNCIONALIDADE DO BOTÃO DE MODOS (exatamente como você pediu) ===
+        const modes = [
+            {
+                name: "light",
+                iconColor: "#000000",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`
+            },
+            {
+                name: "dark",
+                iconColor: "#ffffff",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`
+            },
+            {
+                name: "dim",
+                iconColor: "#ffffff",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H6.5a5 5 0 0 1-1-9.9 5 5 0 0 1 9.78-1.78 5 5 0 0 1 3.72 8.68z"></path></svg>`
+            }
+        ];
+        let currentThemeIndex = 0;
+
+        function applyTheme() {
+            const mode = modes[currentThemeIndex];
+            document.body.classList.remove('theme-light', 'theme-dark', 'theme-dim');
+            document.body.classList.add(`theme-${mode.name}`);
+
+            const btn = document.getElementById('mode-btn');
+            if (btn) {
+                btn.style.color = mode.iconColor;
+                btn.innerHTML = mode.icon;
+                if (mode.name === 'light') {
+                    btn.style.background = 'rgba(255, 255, 255, 0.15)';
+                } else if (mode.name === 'dark') {
+                    btn.style.background = 'rgba(0, 0, 0, 0.4)';
+                } else {
+                    btn.style.background = 'rgba(128, 128, 128, 0.4)';
+                }
+            }
+        }
+
+        function makeDraggable(el) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            el.addEventListener('mousedown', dragStart);
+            el.addEventListener('touchstart', dragStart, { passive: false });
+
+            function dragStart(e) {
+                if (e.type === 'touchstart') {
+                    pos3 = e.touches[0].clientX;
+                    pos4 = e.touches[0].clientY;
+                } else {
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                }
+                document.addEventListener('mousemove', dragMove);
+                document.addEventListener('mouseup', dragEnd);
+                document.addEventListener('touchmove', dragMove, { passive: false });
+                document.addEventListener('touchend', dragEnd);
+            }
+
+            function dragMove(e) {
+                e.preventDefault();
+                let clientX = (e.type.includes('touch') ? e.touches[0].clientX : e.clientX);
+                let clientY = (e.type.includes('touch') ? e.touches[0].clientY : e.clientY);
+
+                pos1 = pos3 - clientX;
+                pos2 = pos4 - clientY;
+                pos3 = clientX;
+                pos4 = clientY;
+
+                let newTop = el.offsetTop - pos2;
+                let newLeft = el.offsetLeft - pos1;
+
+                // Limites: não ultrapassa header nem footer
+                const headerHeight = 90;
+                const footerHeight = 100;
+                const btnSize = 80;
+                const minTop = headerHeight + 20;
+                const maxTop = window.innerHeight - footerHeight - btnSize - 20;
+                const minLeft = 20;
+                const maxLeft = window.innerWidth - btnSize - 20;
+
+                newTop = Math.max(minTop, Math.min(maxTop, newTop));
+                newLeft = Math.max(minLeft, Math.min(maxLeft, newLeft));
+
+                el.style.top = `${newTop}px`;
+                el.style.left = `${newLeft}px`;
+                el.style.right = 'auto';
+            }
+
+            function dragEnd() {
+                document.removeEventListener('mousemove', dragMove);
+                document.removeEventListener('mouseup', dragEnd);
+                document.removeEventListener('touchmove', dragMove);
+                document.removeEventListener('touchend', dragEnd);
+            }
+        }
+
         function initSearchInput() {
             const input = document.getElementById('search-input');
             if (!input) return;
-  
+ 
             input.addEventListener('focus', function() {
-                // Espera o teclado abrir e posiciona o input no centro (fica "parado" onde começou a digitar)
                 setTimeout(() => {
                     this.scrollIntoView({ behavior: "smooth", block: "center" });
                 }, 300);
             });
-            // NOVO: Pesquisa funcional ligada a TODAS as roupas (masculino + feminino + infantil)
             input.addEventListener('keyup', function(e) {
                 if (e.key === 'Enter') {
                     performSearch();
@@ -361,7 +579,6 @@
             const drawer = document.getElementById('drawer');
             const menuIcon = document.getElementById('menu-icon');
             drawer.classList.toggle('active');
- 
             if (drawer.classList.contains('active')) {
                 menuIcon.classList.replace('fa-bars', 'fa-times');
             } else {
@@ -374,10 +591,8 @@
             drawer.classList.remove('active');
             const menuIcon = document.getElementById('menu-icon');
             if(menuIcon) menuIcon.classList.replace('fa-times', 'fa-bars');
- 
             const target = document.getElementById(pId);
             if(target) target.classList.add('active');
- 
             if(pId === 'carrinho') renderCart();
             if(pId === 'favoritos') renderFavorites();
             if(pId === 'pedidos') renderPedidos();
@@ -390,8 +605,6 @@
                 const cat = this.getAttribute('data-cat');
                 this.style.setProperty('--cat-color', color);
                 this.classList.add('clicked');
-                // A animação de troca de cores (0.4s) acontece primeiro
-                // Só depois de 400ms o clique real é ativado (loadVitrine)
                 setTimeout(() => {
                     this.classList.remove('clicked');
                     if (cat) loadVitrine(cat);
@@ -402,15 +615,12 @@
             const grid = document.getElementById('products-grid');
             const vitrine = document.getElementById('vitrine');
             const title = document.getElementById('vitrine-title');
- 
             vitrine.className = 'page px-4 bg-' + cat;
- 
             const titleMap = {
                 masculino: 'Masculinas',
                 feminino: 'Femininas',
                 infantil: 'Infantis'
             };
- 
             title.innerText = "Roupas " + (titleMap[cat] || cat.charAt(0).toUpperCase() + cat.slice(1));
             const filtered = allProducts.filter(p => p.cat === cat);
             grid.innerHTML = filtered.map(prod => createProductCard(prod)).join('');
@@ -454,7 +664,6 @@
             const list = document.getElementById('cart-list');
             const totalEl = document.getElementById('cart-total');
             const buyBtn = document.getElementById('buy-btn');
- 
             if(cart.length === 0) {
                 list.innerHTML = "<p class='text-center text-gray-500'>Carrinho vazio</p>";
                 totalEl.innerText = "Total: R$ 0,00";
@@ -463,32 +672,16 @@
                 if(actions) actions.classList.add('hidden');
                 return;
             }
- 
-            // Sincroniza itens selecionados (remove IDs que não existem mais no carrinho)
             selectedCartIds = selectedCartIds.filter(id => cart.some(item => item.id === id));
- 
             let total = 0;
             list.innerHTML = cart.map((item, index) => {
                 total += item.price * item.qty;
-
-                // === ALTERAÇÃO SOLICITADA ===
-                // 1. Quando NÃO estiver no modo de seleção múltipla (caixas ocultas):
-                //    - NÃO renderiza nenhum espaço vazio à esquerda → a imagem ocupa todo o espaço da esquerda
-                // 2. Quando estiver no modo de seleção múltipla:
-                //    - Renderiza a checkbox normalmente
-                // 3. Quando NÃO estiver no modo de seleção múltipla:
-                //    - Renderiza o botão de lixeira normalmente
-                // 4. Quando estiver no modo de seleção múltipla:
-                //    - NÃO renderiza nenhum espaço vazio à direita do "+"
-                //    - Os botões (- quantidade +) ocupam o espaço que antes era reservado para a lixeira
                 const checkboxHTML = isMultiSelectMode
                     ? `<input type="checkbox" class="w-5 h-5 accent-[#f7d074] cursor-pointer mt-1" ${selectedCartIds.includes(item.id) ? 'checked' : ''} onchange="toggleCartSelect(${item.id}, this.checked); event.stopImmediatePropagation();">`
                     : '';
-
                 const trashHTML = !isMultiSelectMode
                     ? `<i class="fa-solid fa-trash-can ml-2 text-black" onclick="prepareSingleCartDelete(${item.id}); event.stopImmediatePropagation();"></i>`
                     : '';
-
                 return `
                     <div class="flex items-center gap-4 bg-white p-3 rounded-xl shadow-sm border">
                         ${checkboxHTML}
@@ -506,25 +699,19 @@
                     </div>
                 `;
             }).join('');
- 
             totalEl.innerText = `Total: R$ ${total.toFixed(2)}`;
             buyBtn.classList.remove('hidden');
- 
-            // Atualiza a barra de ações múltiplas (agora com modo de seleção)
             const actions = document.getElementById('cart-multi-actions');
             actions.classList.remove('hidden');
             const leftEl = document.getElementById('multi-left');
             const delBtn = document.getElementById('multi-delete-btn');
             const delTxt = document.getElementById('delete-btn-text');
- 
             if (!isMultiSelectMode) {
-                // Botão "Selecionar itens" (aparece quando as caixas estão ocultas)
                 leftEl.innerHTML = `<button onclick="toggleMultiSelectMode(); event.stopImmediatePropagation();" class="bg-black text-[#f4d06f] px-6 py-3 rounded-2xl font-bold uppercase text-sm flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-check-square mr-1"></i>SELECIONAR ITENS</button>`;
                 leftEl.className = "flex items-center";
                 delBtn.classList.add('hidden');
             } else {
                 const count = selectedCartIds.length;
-                // Botão "Cancelar" agora é um botão preto, sem sublinhado, texto centralizado
                 leftEl.innerHTML = `
                     <button onclick="toggleMultiSelectMode()" class="bg-black text-[#f4d06f] px-6 py-3 rounded-2xl font-bold uppercase text-sm whitespace-nowrap">Cancelar</button>
                 `;
@@ -543,7 +730,6 @@
                 renderCart();
             }
         }
-        // Nova função: alterna o modo de seleção múltipla (caixas de marcação só aparecem aqui)
         function toggleMultiSelectMode() {
             isMultiSelectMode = !isMultiSelectMode;
             if (!isMultiSelectMode) {
@@ -551,7 +737,6 @@
             }
             renderCart();
         }
-        // NOVO: Funções de seleção múltipla e confirmação de exclusão
         function toggleCartSelect(id, checked) {
             if (checked) {
                 if (!selectedCartIds.includes(id)) selectedCartIds.push(id);
@@ -597,10 +782,8 @@
         function toggleFav(id) {
             const index = favorites.findIndex(p => p.id === id);
             const isOnFavoritesPage = document.getElementById('favoritos').classList.contains('active');
-            // Se estiver na aba Favoritos e for desfavoritar → mostra confirmação
             if (index > -1 && isOnFavoritesPage) {
                 pendingUnfavId = id;
-                // Animação imediata do botão (preto → amarelo e amarelo → preto) antes de mostrar o modal
                 const cards = document.querySelectorAll(`.product-card[data-prod-id="${id}"]`);
                 cards.forEach(card => {
                     const favBtn = card.querySelector('.btn-fav');
@@ -610,7 +793,6 @@
                         if (span) span.innerText = 'Favoritar';
                     }
                 });
-                // Clique só ativa o modal após 0.4s (tempo da animação)
                 setTimeout(() => {
                     showConfirmModal();
                 }, 400);
@@ -623,12 +805,10 @@
                 favorites.push(prod);
             }
             updateProductButtons(id);
-            // Se estava na aba favoritos, atualiza a lista após a ação
             if (isOnFavoritesPage) {
                 renderFavorites();
             }
         }
-        // MODAL DE CONFIRMAÇÃO (nova funcionalidade solicitada)
         function showConfirmModal() {
             const modal = document.getElementById('confirm-modal');
             modal.classList.remove('hidden');
@@ -644,7 +824,6 @@
                 updateProductButtons(pendingUnfavId);
                 renderFavorites();
             } else if (pendingUnfavId !== null) {
-                // Se o usuário clicar em NÃO, volta o botão para o estado original (com animação reversa)
                 const id = pendingUnfavId;
                 const cards = document.querySelectorAll(`.product-card[data-prod-id="${id}"]`);
                 cards.forEach(card => {
@@ -661,7 +840,6 @@
         function renderFavorites() {
             const list = document.getElementById('fav-list');
             if(favorites.length === 0) {
-                // Sempre centralizado e INDEPENDENTE da responsividade dos cards (usa col-span-full)
                 list.innerHTML = `<p class="col-span-full text-center text-gray-500 py-12">Nenhum favorito ainda.</p>`;
                 return;
             }
@@ -731,6 +909,22 @@
         document.addEventListener('DOMContentLoaded', () => {
             initSearchInput();
             updateCartUI();
+
+            // Inicializa o botão de modos
+            const themeSwitcher = document.getElementById('theme-switcher');
+            if (themeSwitcher) {
+                makeDraggable(themeSwitcher);
+                const modeBtn = document.getElementById('mode-btn');
+                if (modeBtn) {
+                    modeBtn.addEventListener('click', (e) => {
+                        e.stopImmediatePropagation();
+                        currentThemeIndex = (currentThemeIndex + 1) % 3;
+                        applyTheme();
+                    });
+                }
+                // Começa no modo claro (padrão)
+                applyTheme();
+            }
         });
     </script>
 </body>
