@@ -50,6 +50,9 @@
         .cat-card.clicked i {
             color: var(--cat-color);
         }
+        .cat-card.clicked p {
+            color: var(--cat-color) !important;
+        }
         /* Pages */
         .page {
             display: none;
@@ -109,19 +112,19 @@
             font-size: 14px;
         }
         .btn-cart.active { background: white; color: #53565a; border: 2px solid #53565a; }
-        .btn-fav { 
-            background: #f4d06f; 
-            color: black; 
-            width: 100%; 
-            padding: 10px; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            margin-top: 8px; 
-            transition: 0.4s; 
+        .btn-fav {
+            background: #f4d06f;
+            color: black;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 8px;
+            transition: 0.4s;
         }
-        .btn-fav.active { 
-            background: #000; 
-            color: #f4d06f; 
+        .btn-fav.active {
+            background: #000;
+            color: #f4d06f;
         }
         /* Bottom Nav */
         .bottom-nav {
@@ -160,6 +163,12 @@
                 grid-template-columns: repeat(3, minmax(0, 1fr));
             }
         }
+        @media (min-width: 1080px) {
+            #products-grid,
+            #fav-list {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
     </style>
 </head>
 <body>
@@ -184,20 +193,20 @@
         </div>
     </header>
     <main>
-        <section id="home" class="page active text-center">
+        <section id="home" class="page active text-center px-[13px]">
             <img src="RDM moda & estilo.svg" alt="Logo RDM" class="logo-img mb-1 w-full max-w-xs mx-auto">
             <input id="search-input" type="text" placeholder="Buscar roupas..." class="custom-input mb-1">
-        
+       
             <div class="grid grid-cols-3 gap-3">
-                <div onclick="loadVitrine('masculino')" class="cat-card bg-[#72bcd4] p-4 rounded-xl flex flex-col items-center" data-color="#72bcd4">
+                <div class="cat-card bg-[#72bcd4] p-4 rounded-xl flex flex-col items-center" data-color="#72bcd4" data-cat="masculino">
                     <i class="fa-solid fa-shirt text-3xl mb-2"></i>
                     <p class="font-bold text-[10px] uppercase">Masculino</p>
                 </div>
-                <div onclick="loadVitrine('feminino')" class="cat-card bg-[#f497a9] p-4 rounded-xl flex flex-col items-center" data-color="#f497a9">
+                <div class="cat-card bg-[#f497a9] p-4 rounded-xl flex flex-col items-center" data-color="#f497a9" data-cat="feminino">
                     <i class="fa-solid fa-person-dress text-3xl mb-2"></i>
                     <p class="font-bold text-[10px] uppercase">Feminino</p>
                 </div>
-                <div onclick="loadVitrine('infantil')" class="cat-card bg-[#f7d774] p-4 rounded-xl flex flex-col items-center" data-color="#f7d774">
+                <div class="cat-card bg-[#f7d774] p-4 rounded-xl flex flex-col items-center" data-color="#f7d774" data-cat="infantil">
                     <i class="fa-solid fa-baby text-3xl mb-2"></i>
                     <p class="font-bold text-[10px] uppercase">Infantil</p>
                 </div>
@@ -288,23 +297,55 @@
             { id: 17, name: "Vestidinho Bebê", price: 35.90, cat: "infantil" },
             { id: 18, name: "Shorts Kids", price: 25.99, cat: "infantil" }
         ];
-        // ==================== NOVO: Input de pesquisa (exatamente o que você pediu) ====================
+
         function initSearchInput() {
             const input = document.getElementById('search-input');
             if (!input) return;
-         
+        
             input.addEventListener('focus', function() {
                 // Espera o teclado abrir e posiciona o input no centro (fica "parado" onde começou a digitar)
                 setTimeout(() => {
                     this.scrollIntoView({ behavior: "smooth", block: "center" });
                 }, 300);
             });
+
+            // NOVO: Pesquisa funcional ligada a TODAS as roupas (masculino + feminino + infantil)
+            input.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
         }
+
+        function performSearch() {
+            const input = document.getElementById('search-input');
+            if (!input) return;
+            const term = input.value.trim().toLowerCase();
+            if (!term) {
+                showPage('home');
+                return;
+            }
+            const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
+            const grid = document.getElementById('products-grid');
+            const vitrine = document.getElementById('vitrine');
+            const title = document.getElementById('vitrine-title');
+
+            vitrine.className = 'page px-4';
+            title.innerText = `Resultados para "${input.value}"`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-center text-gray-500 py-12">Nenhum produto encontrado</p>`;
+            } else {
+                grid.innerHTML = filtered.map(prod => createProductCard(prod)).join('');
+            }
+            showPage('vitrine');
+        }
+
         function toggleMenu() {
             const drawer = document.getElementById('drawer');
             const menuIcon = document.getElementById('menu-icon');
             drawer.classList.toggle('active');
-        
+       
             if (drawer.classList.contains('active')) {
                 menuIcon.classList.replace('fa-bars', 'fa-times');
             } else {
@@ -317,10 +358,10 @@
             drawer.classList.remove('active');
             const menuIcon = document.getElementById('menu-icon');
             if(menuIcon) menuIcon.classList.replace('fa-times', 'fa-bars');
-        
+       
             const target = document.getElementById(pId);
             if(target) target.classList.add('active');
-        
+       
             if(pId === 'carrinho') renderCart();
             if(pId === 'favoritos') renderFavorites();
             if(pId === 'pedidos') renderPedidos();
@@ -330,10 +371,14 @@
         document.querySelectorAll('.cat-card').forEach(card => {
             card.addEventListener('click', function() {
                 const color = this.getAttribute('data-color');
+                const cat = this.getAttribute('data-cat');
                 this.style.setProperty('--cat-color', color);
                 this.classList.add('clicked');
+                // A animação de troca de cores (0.4s) acontece primeiro
+                // Só depois de 400ms o clique real é ativado (loadVitrine)
                 setTimeout(() => {
                     this.classList.remove('clicked');
+                    if (cat) loadVitrine(cat);
                 }, 400);
             });
         });
@@ -341,15 +386,15 @@
             const grid = document.getElementById('products-grid');
             const vitrine = document.getElementById('vitrine');
             const title = document.getElementById('vitrine-title');
-        
+       
             vitrine.className = 'page px-4 bg-' + cat;
-        
+       
             const titleMap = {
                 masculino: 'Masculinas',
                 feminino: 'Femininas',
                 infantil: 'Infantis'
             };
-        
+       
             title.innerText = "Roupas " + (titleMap[cat] || cat.charAt(0).toUpperCase() + cat.slice(1));
             const filtered = allProducts.filter(p => p.cat === cat);
             grid.innerHTML = filtered.map(prod => createProductCard(prod)).join('');
@@ -393,14 +438,14 @@
             const list = document.getElementById('cart-list');
             const totalEl = document.getElementById('cart-total');
             const buyBtn = document.getElementById('buy-btn');
-        
+       
             if(cart.length === 0) {
                 list.innerHTML = "<p class='text-center text-gray-500'>Carrinho vazio</p>";
                 totalEl.innerText = "Total: R$ 0,00";
                 buyBtn.classList.add('hidden');
                 return;
             }
-        
+       
             let total = 0;
             list.innerHTML = cart.map((item, index) => {
                 total += item.price * item.qty;
@@ -503,7 +548,8 @@
         function renderFavorites() {
             const list = document.getElementById('fav-list');
             if(favorites.length === 0) {
-                list.innerHTML = "<p class='text-center text-gray-500'>Nenhum favorito ainda.</p>";
+                // Sempre centralizado e INDEPENDENTE da responsividade dos cards (usa col-span-full)
+                list.innerHTML = `<p class="col-span-full text-center text-gray-500 py-12">Nenhum favorito ainda.</p>`;
                 return;
             }
             list.innerHTML = favorites.map(prod => createProductCard(prod)).join('');
