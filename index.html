@@ -69,15 +69,12 @@
         }
         .page.active { display: block; animation: fadeIn 0.3s; }
   
-        /* SCROLL NA HOME + SOBRE (o que você pediu) */
-        #home.page, #vitrine.page, #favoritos.page, #carrinho.page, #sobre.page {
+        /* SCROLL SOMENTE NAS PÁGINAS QUE PRECISAM (mantido exatamente como estava nas outras abas) */
+        #vitrine.page, #favoritos.page, #carrinho.page {
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
-        /* Espaço extra na Home quando o teclado do celular abrir */
-        #home.page {
-            padding-bottom: 380px;
-        }
+  
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
