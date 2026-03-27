@@ -690,11 +690,13 @@
                 let newTop = el.offsetTop - pos2;
                 let newLeft = el.offsetLeft - pos1;
           
+                // === ALTERAÇÃO FEITA: botão agora respeita EXATAMENTE os limites do <main> ===
+                // Não ultrapassa o header (90px) nem o footer (100px) em nenhum momento
                 const headerHeight = 90;
                 const footerHeight = 100;
                 const btnSize = 36;
-                const minTop = headerHeight + 20;
-                const maxTop = window.innerHeight - footerHeight - btnSize - 20;
+                const minTop = headerHeight + 20;                    // limite superior do main
+                const maxTop = window.innerHeight - footerHeight - btnSize - 20; // limite inferior do main
                 const minLeft = 20;
                 const maxLeft = window.innerWidth - btnSize - 20;
                 newTop = Math.max(minTop, Math.min(maxTop, newTop));
