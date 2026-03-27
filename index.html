@@ -460,6 +460,25 @@
         body.theme-dim .cat-card.clicked[data-cat="infantil"] {
             background-color: #e4c55e !important;
         }
+
+        /* === NOVA ALTERAÇÃO SOLICITADA: Botão Favoritar nos cards (apenas em modo escuro e cinza) ===
+           Quando o usuário clica em "Favoritar" (estado .active):
+           - Botão fica preto com borda amarela
+           - Ícone e texto ficam amarelos
+           (mantive 100% tudo que já estava bom, só adicionei isso no final do CSS) */
+        body.theme-dark .btn-fav.active,
+        body.theme-dim .btn-fav.active {
+            background-color: #000000 !important;
+            border: 2px solid #f4d06f !important;
+        }
+        body.theme-dark .btn-fav.active,
+        body.theme-dark .btn-fav.active i,
+        body.theme-dark .btn-fav.active span,
+        body.theme-dim .btn-fav.active,
+        body.theme-dim .btn-fav.active i,
+        body.theme-dim .btn-fav.active span {
+            color: #f4d06f !important;
+        }
     </style>
 </head>
 <body>
