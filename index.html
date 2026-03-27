@@ -350,7 +350,7 @@
         }
         body.theme-dim .btn-cart.active {
             background: #a0a0a0 !important;
-            color: #ffffff !important;
+            color: #f4d06f !important;
         }
         body.theme-dim .custom-input {
             background: #999999 !important;
@@ -389,6 +389,39 @@
         body.theme-dim #multi-delete-btn i {
             color: #72bcd4 !important;
         }
+
+        /* OVERRIDES ADICIONAIS PARA AS MUDANÇAS SOLICITADAS (sem alterar nada que já estava bom) */
+        /* Carrinho count vermelho em TODOS os modos */
+        body.theme-dark #cart-count,
+        body.theme-dim #cart-count {
+            background-color: #ef4444 !important;
+            color: #ffffff !important;
+        }
+
+        /* Checkbox de itens selecionados amarelo em TODOS os modos */
+        body.theme-dark .custom-checkbox:checked,
+        body.theme-dim .custom-checkbox:checked {
+            background-color: #f7d774 !important;
+            border-color: #f7d774 !important;
+        }
+
+        /* Botão "SELECIONAR ITENS" e "EXCLUIR X ITENS" no carrinho */
+        body.theme-dark #multi-left button,
+        body.theme-dark #multi-left button i,
+        body.theme-dark #multi-delete-btn,
+        body.theme-dark #multi-delete-btn i,
+        body.theme-dim #multi-left button,
+        body.theme-dim #multi-left button i,
+        body.theme-dim #multi-delete-btn,
+        body.theme-dim #multi-delete-btn i {
+            color: #f4d06f !important;
+        }
+        body.theme-dark #multi-left button,
+        body.theme-dark #multi-delete-btn,
+        body.theme-dim #multi-left button,
+        body.theme-dim #multi-delete-btn {
+            background-color: #222222 !important;
+        }
     </style>
 </head>
 <body>
@@ -409,7 +442,7 @@
         <h1 class="font-bold text-lg">RDM Moda & Estilo</h1>
         <div class="relative">
             <i class="fa-solid fa-cart-shopping text-2xl icon-btn" onclick="showPage('carrinho')"></i>
-            <span id="cart-count" class="hidden absolute -top-2 -right-2 bg-[#f7d774] text-black text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+            <span id="cart-count" class="hidden absolute -top-2 -right-2 bg-[#ef4444] text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
         </div>
     </header>
     <main>
