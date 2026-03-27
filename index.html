@@ -28,7 +28,7 @@
         .bg-feminino { background-color: #f497a9 !important; }
         .bg-infantil { background-color: #f7d774 !important; }
         .neon-green { background-color: #f7d774; color: #000 !important; }
-        
+       
         /* Animação de Ícones e Botões */
         .icon-btn {
             color: #000;
@@ -39,7 +39,7 @@
             transform: scale(1.3);
             color: #4b5563;
         }
-        
+       
         /* Categorias Home */
         .cat-card {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -56,7 +56,7 @@
         .cat-card.clicked p {
             color: var(--cat-color) !important;
         }
-        
+       
         /* Pages */
         .page {
             display: none;
@@ -67,7 +67,7 @@
             overflow-y: hidden;
         }
         .page.active { display: block; animation: fadeIn 0.3s; }
-        
+       
         /* SCROLL NA HOME + SOBRE (o que você pediu) */
         #home.page, #vitrine.page, #favoritos.page, #carrinho.page, #sobre.page {
             overflow-y: auto;
@@ -81,7 +81,7 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+       
         /* Menu Lateral */
         .drawer {
             transition: transform 0.3s ease-in-out;
@@ -89,7 +89,7 @@
             z-index: 40;
         }
         .drawer.active { transform: translateX(0); }
-        
+       
         /* Card de Produto */
         .product-card {
             background: white;
@@ -105,7 +105,7 @@
             border-radius: 15px;
             margin-bottom: 10px;
         }
-        
+       
         /* Botões do Card */
         .btn-cart {
             background: #53565a;
@@ -134,7 +134,7 @@
             background: #000;
             color: #f4d06f;
         }
-        
+       
         /* Bottom Nav */
         .bottom-nav {
             position: fixed;
@@ -155,8 +155,8 @@
             border: none;
             outline: none;
         }
-        
-        /* GRID RESPONSIVO PARA CARDS (conforme sua solicitação) */
+       
+        /* GRID RESPONSIVO PARA CARDS */
         #products-grid,
         #fav-list {
             grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -179,13 +179,12 @@
                 grid-template-columns: repeat(4, minmax(0, 1fr));
             }
         }
-
         /* === BOTÃO DE MODOS (flutuante + arrastável) === */
         #theme-switcher {
             position: fixed;
             z-index: 99999;
-            width: 36px; /* Reduzido em 55% */
-            height: 36px; /* Reduzido em 55% */
+            width: 36px;
+            height: 36px;
             right: 20px;
             top: 120px;
             user-select: none;
@@ -209,12 +208,45 @@
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
         }
         #mode-btn svg {
-            width: 22px; /* Ajuste proporcional ao novo tamanho */
+            width: 22px;
             height: 22px;
         }
-
-        /* === OVERRIDES DOS 3 MODOS (sem mexer no resto do código) === */
-        
+        /* === CAIXA DE SELEÇÃO CUSTOMIZADA E TRANSPARENTE === */
+        .custom-checkbox {
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: transparent !important;
+            border: 2px solid #9ca3af; /* cor da borda quando desmarcado */
+            border-radius: 4px;
+            width: 20px;
+            height: 20px;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            margin-top: 4px;
+        }
+        .custom-checkbox:checked {
+            background-color: #f7d774 !important; /* Amarelo no modo claro */
+            border-color: #f7d774 !important;
+        }
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid #000; /* V de cor preta */
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        /* === COR DO ÍCONE DE + NO CARRINHO === */
+        .cart-plus-icon {
+            color: #f7d774; /* Amarelo no modo claro */
+            cursor: pointer;
+        }
+        /* === OVERRIDES DOS 3 MODOS === */
+       
         /* Modo Escuro (preto) */
         body.theme-dark {
             background-color: #000000 !important;
@@ -256,20 +288,33 @@
             background: #222222 !important;
             color: #f4d06f !important;
         }
-        /* Customizações Modo Escuro pedidas */
         body.theme-dark #pedidos-msg.text-red-500 {
-            color: #ef4444 !important; /* Mantém vermelho */
+            color: #ef4444 !important;
         }
         body.theme-dark #cart-count {
-            background-color: #72bcd4 !important; /* Azul Masculino */
+            background-color: #72bcd4 !important;
             color: #000000 !important;
         }
-        body.theme-dark .btn-fav, 
-        body.theme-dark .btn-fav i, 
+        body.theme-dark .btn-fav,
+        body.theme-dark .btn-fav i,
         body.theme-dark .btn-fav span {
-            color: #000000 !important; /* Texto e icone preto */
+            color: #000000 !important;
         }
-
+       
+        /* Elementos Amarelos viram Azuis no Modo Escuro no Carrinho */
+        body.theme-dark .custom-checkbox:checked {
+            background-color: #72bcd4 !important;
+            border-color: #72bcd4 !important;
+        }
+        body.theme-dark .cart-plus-icon {
+            color: #72bcd4 !important;
+        }
+        body.theme-dark #multi-left button,
+        body.theme-dark #multi-left button i,
+        body.theme-dark #multi-delete-btn,
+        body.theme-dark #multi-delete-btn i {
+            color: #72bcd4 !important;
+        }
         /* Modo Cinza (dim) */
         body.theme-dim {
             background-color: #808080 !important;
@@ -307,10 +352,8 @@
             background: #a0a0a0 !important;
             color: #ffffff !important;
         }
-        
-        /* Customizações Modo Cinza pedidas */
         body.theme-dim .custom-input {
-            background: #999999 !important; /* Cinza mais claro */
+            background: #999999 !important;
             color: #ffffff !important;
         }
         body.theme-dim .custom-input::placeholder {
@@ -318,26 +361,27 @@
             opacity: 1;
         }
         body.theme-dim #pedidos-msg.text-red-500 {
-            color: #ef4444 !important; /* Mantém vermelho */
+            color: #ef4444 !important;
         }
         body.theme-dim #cart-count {
-            background-color: #72bcd4 !important; /* Azul Masculino */
+            background-color: #72bcd4 !important;
             color: #000000 !important;
         }
-        body.theme-dim .btn-fav, 
-        body.theme-dim .btn-fav i, 
+        body.theme-dim .btn-fav,
+        body.theme-dim .btn-fav i,
         body.theme-dim .btn-fav span {
-            color: #000000 !important; /* Texto e icone preto */
+            color: #000000 !important;
         }
         body.theme-dim .btn-cart {
-            color: #ffffff !important; /* Fontes brancas no botão de carrinho */
+            color: #ffffff !important;
         }
-        
-        /* Cores Azul Masculino (#72bcd4) nos ícones/botões do Carrinho no Modo Cinza */
-        body.theme-dim input[type="checkbox"] {
-            accent-color: #72bcd4 !important;
+       
+        /* Elementos Amarelos viram Azuis no Modo Cinza no Carrinho */
+        body.theme-dim .custom-checkbox:checked {
+            background-color: #72bcd4 !important;
+            border-color: #72bcd4 !important;
         }
-        body.theme-dim #cart-list .fa-circle-plus,
+        body.theme-dim .cart-plus-icon,
         body.theme-dim #cart-list .fa-trash-can,
         body.theme-dim #multi-left button,
         body.theme-dim #multi-left button i,
@@ -370,7 +414,7 @@
     </header>
     <main>
         <section id="home" class="page active text-center px-[13px]">
-            <img src="RDM moda & estilo.svg" alt="Logo RDM" class="logo-img mb-1 w-full max-w-xs mx-auto">
+            <img src="RDM moda & estilo.svg" alt="Logo RDM" class="logo-img mb-1 w-full max-w-xs mx-auto rdm-logo">
             <input id="search-input" type="text" placeholder="Buscar roupas..." class="custom-input mb-1">
             <div class="grid grid-cols-3 gap-3">
                 <div class="cat-card bg-[#72bcd4] p-4 rounded-xl flex flex-col items-center" data-color="#72bcd4" data-cat="masculino">
@@ -426,7 +470,7 @@
             <button onclick="showPage('home')" class="bg-black text-white px-8 py-3 rounded-full uppercase font-bold">Voltar para Home</button>
         </section>
         <section id="sobre" class="page px-4 text-center">
-            <img src="RDM moda & estilo.svg" alt="Sobre RDM" class="w-full max-w-xs mx-auto mb-4">
+            <img src="RDM moda & estilo.svg" alt="Sobre RDM" class="rdm-logo w-full max-w-xs mx-auto mb-4">
             <div class="pb-20">
                 <p class="text-gray-800">
                     <strong>RDM Moda & Estilo: Sua Loja em Manaus</strong><br><br>
@@ -441,11 +485,9 @@
         <i class="fa-solid fa-user text-3xl icon-btn" onclick="showPage('cadastro')"></i>
         <i class="fa-solid fa-calendar-days text-3xl icon-btn" onclick="showPage('pedidos')"></i>
     </nav>
-
     <div id="theme-switcher">
         <button id="mode-btn"></button>
     </div>
-
     <div id="confirm-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
         <div class="bg-white rounded-3xl p-6 max-w-xs w-full mx-4 text-center shadow-2xl">
             <p class="font-bold text-lg mb-6">Tem certeza que deseja desfavoritar este item?</p>
@@ -464,7 +506,7 @@
             </div>
         </div>
     </div>
-    
+   
     <script>
         // Estado da Aplicação
         let cart = [];
@@ -494,8 +536,6 @@
             { id: 17, name: "Vestidinho Bebê", price: 35.90, cat: "infantil" },
             { id: 18, name: "Shorts Kids", price: 25.99, cat: "infantil" }
         ];
-
-        // === NOVO: FUNCIONALIDADE DO BOTÃO DE MODOS (exatamente como você pediu) ===
         const modes = [
             {
                 name: "light",
@@ -515,11 +555,18 @@
         ];
         let currentThemeIndex = 0;
 
+        function updateLogos() {
+            const isDark = document.body.classList.contains('theme-dark');
+            const src = isDark ? "RDM moda & estilo2.svg" : "RDM moda & estilo.svg";
+            document.querySelectorAll('.rdm-logo').forEach(img => {
+                img.src = src;
+            });
+        }
+
         function applyTheme() {
             const mode = modes[currentThemeIndex];
             document.body.classList.remove('theme-light', 'theme-dark', 'theme-dim');
             document.body.classList.add(`theme-${mode.name}`);
-
             const btn = document.getElementById('mode-btn');
             if (btn) {
                 btn.style.color = mode.iconColor;
@@ -532,13 +579,13 @@
                     btn.style.background = 'rgba(128, 128, 128, 0.4)';
                 }
             }
+            // Atualiza a imagem do logo apenas no modo escuro (conforme solicitado)
+            updateLogos();
         }
-
         function makeDraggable(el) {
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
             el.addEventListener('mousedown', dragStart);
             el.addEventListener('touchstart', dragStart, { passive: false });
-
             function dragStart(e) {
                 if (e.type === 'touchstart') {
                     pos3 = e.touches[0].clientX;
@@ -552,7 +599,6 @@
                 document.addEventListener('touchmove', dragMove, { passive: false });
                 document.addEventListener('touchend', dragEnd);
             }
-
             function dragMove(e) {
                 e.preventDefault();
                 let clientX = (e.type.includes('touch') ? e.touches[0].clientX : e.clientX);
@@ -563,23 +609,20 @@
                 pos4 = clientY;
                 let newTop = el.offsetTop - pos2;
                 let newLeft = el.offsetLeft - pos1;
-                
-                // Limites: não ultrapassa header nem footer
+               
                 const headerHeight = 90;
                 const footerHeight = 100;
-                const btnSize = 36; // Tamanho atualizado de acordo com sua nova regra
+                const btnSize = 36;
                 const minTop = headerHeight + 20;
                 const maxTop = window.innerHeight - footerHeight - btnSize - 20;
                 const minLeft = 20;
                 const maxLeft = window.innerWidth - btnSize - 20;
-
                 newTop = Math.max(minTop, Math.min(maxTop, newTop));
                 newLeft = Math.max(minLeft, Math.min(maxLeft, newLeft));
                 el.style.top = `${newTop}px`;
                 el.style.left = `${newLeft}px`;
                 el.style.right = 'auto';
             }
-
             function dragEnd() {
                 document.removeEventListener('mousemove', dragMove);
                 document.removeEventListener('mouseup', dragEnd);
@@ -587,11 +630,9 @@
                 document.removeEventListener('touchend', dragEnd);
             }
         }
-
         function initSearchInput() {
             const input = document.getElementById('search-input');
             if (!input) return;
- 
             input.addEventListener('focus', function() {
                 setTimeout(() => {
                     this.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -726,7 +767,7 @@
             list.innerHTML = cart.map((item, index) => {
                 total += item.price * item.qty;
                 const checkboxHTML = isMultiSelectMode
-                    ? `<input type="checkbox" class="w-5 h-5 accent-[#f7d074] cursor-pointer mt-1" ${selectedCartIds.includes(item.id) ? 'checked' : ''} onchange="toggleCartSelect(${item.id}, this.checked); event.stopImmediatePropagation();">`
+                    ? `<input type="checkbox" class="custom-checkbox" ${selectedCartIds.includes(item.id) ? 'checked' : ''} onchange="toggleCartSelect(${item.id}, this.checked); event.stopImmediatePropagation();">`
                     : '';
                 const trashHTML = !isMultiSelectMode
                     ? `<i class="fa-solid fa-trash-can ml-2 text-black" onclick="prepareSingleCartDelete(${item.id}); event.stopImmediatePropagation();"></i>`
@@ -742,7 +783,7 @@
                         <div class="flex items-center gap-2">
                             <i class="fa-solid fa-circle-minus text-xl text-gray-400" onclick="changeQty(${index}, -1); event.stopImmediatePropagation();"></i>
                             <span class="font-bold">${item.qty}</span>
-                            <i class="fa-solid fa-circle-plus text-xl text-[#f7d074]" onclick="changeQty(${index}, 1); event.stopImmediatePropagation();"></i>
+                            <i class="fa-solid fa-circle-plus text-xl cart-plus-icon" onclick="changeQty(${index}, 1); event.stopImmediatePropagation();"></i>
                             ${trashHTML}
                         </div>
                     </div>
@@ -954,12 +995,9 @@
                 msg.classList.remove('text-red-500');
             }
         }
-        // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
             initSearchInput();
             updateCartUI();
-
-            // Inicializa o botão de modos
             const themeSwitcher = document.getElementById('theme-switcher');
             if (themeSwitcher) {
                 makeDraggable(themeSwitcher);
@@ -971,7 +1009,6 @@
                         applyTheme();
                     });
                 }
-                // Começa no modo claro (padrão)
                 applyTheme();
             }
         });
