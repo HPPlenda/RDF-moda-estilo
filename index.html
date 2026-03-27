@@ -28,7 +28,7 @@
         .bg-feminino { background-color: #f497a9 !important; }
         .bg-infantil { background-color: #f7d774 !important; }
         .neon-green { background-color: #f7d774; color: #000 !important; }
-     
+    
         /* Animação de Ícones e Botões */
         .icon-btn {
             color: #000;
@@ -39,7 +39,7 @@
             transform: scale(1.3);
             color: #4b5563;
         }
-     
+    
         /* Categorias Home */
         .cat-card {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -56,7 +56,7 @@
         .cat-card.clicked p {
             color: var(--cat-color) !important;
         }
-     
+    
         /* Pages */
         .page {
             display: none;
@@ -67,7 +67,7 @@
             overflow-y: hidden;
         }
         .page.active { display: block; animation: fadeIn 0.3s; }
-     
+    
         /* SCROLL NA HOME + SOBRE (o que você pediu) */
         #home.page, #vitrine.page, #favoritos.page, #carrinho.page, #sobre.page {
             overflow-y: auto;
@@ -81,7 +81,7 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-     
+    
         /* Menu Lateral */
         .drawer {
             transition: transform 0.3s ease-in-out;
@@ -89,7 +89,7 @@
             z-index: 40;
         }
         .drawer.active { transform: translateX(0); }
-     
+    
         /* Card de Produto */
         .product-card {
             background: white;
@@ -105,7 +105,7 @@
             border-radius: 15px;
             margin-bottom: 10px;
         }
-     
+    
         /* Botões do Card */
         .btn-cart {
             background: #53565a;
@@ -134,7 +134,7 @@
             background: #000;
             color: #f4d06f;
         }
-     
+    
         /* Bottom Nav */
         .bottom-nav {
             position: fixed;
@@ -155,7 +155,7 @@
             border: none;
             outline: none;
         }
-     
+    
         /* GRID RESPONSIVO PARA CARDS */
         #products-grid,
         #fav-list {
@@ -246,7 +246,7 @@
             cursor: pointer;
         }
         /* === OVERRIDES DOS 3 MODOS === */
-     
+    
         /* Modo Escuro (preto) */
         body.theme-dark {
             background-color: #000000 !important;
@@ -300,7 +300,7 @@
         body.theme-dark .btn-fav span {
             color: #000000 !important;
         }
-     
+    
         /* Elementos Amarelos viram Azuis no Modo Escuro no Carrinho */
         body.theme-dark .custom-checkbox:checked {
             background-color: #72bcd4 !important;
@@ -375,7 +375,7 @@
         body.theme-dim .btn-cart {
             color: #ffffff !important;
         }
-     
+    
         /* Elementos Amarelos viram Azuis no Modo Cinza no Carrinho */
         body.theme-dim .custom-checkbox:checked {
             background-color: #72bcd4 !important;
@@ -407,19 +407,22 @@
         body.theme-dark #multi-left button i,
         body.theme-dark #multi-delete-btn,
         body.theme-dark #multi-delete-btn i,
+        body.theme-dark #multi-delete-btn span,
         body.theme-dim #multi-left button,
         body.theme-dim #multi-left button i,
         body.theme-dim #multi-delete-btn,
-        body.theme-dim #multi-delete-btn i {
+        body.theme-dim #multi-delete-btn i,
+        body.theme-dim #multi-delete-btn span {
             color: #f4d06f !important;
         }
         body.theme-dark #multi-left button,
-        body.theme-dark #multi-delete-btn,
-        body.theme-dim #multi-left button,
-        body.theme-dim #multi-delete-btn {
+        body.theme-dark #multi-delete-btn {
             background-color: #222222 !important;
         }
-
+        body.theme-dim #multi-left button,
+        body.theme-dim #multi-delete-btn {
+            background-color: #6e6e6e !important;
+        }
         /* === NOVOS OVERRIDES PARA O CARRINHO (exatamente o que você pediu) === */
         /* Onde era amarelo no modo claro agora fica amarelo também no escuro e cinza (ícone +) */
         body.theme-dark .cart-plus-icon,
@@ -548,7 +551,6 @@
             </div>
         </div>
     </div>
- 
     <script>
         // Estado da Aplicação
         let cart = [];
@@ -559,7 +561,7 @@
         let isMultiSelectMode = false;
         let user = JSON.parse(localStorage.getItem('user')) || null;
         let logoSrc = "RDM moda & estilo.svg";
-      
+     
         const allProducts = [
             { id: 1, name: "Camisa Casual", price: 49.99, cat: "masculino" },
             { id: 2, name: "Calça Jeans", price: 89.90, cat: "masculino" },
@@ -654,7 +656,7 @@
                 pos4 = clientY;
                 let newTop = el.offsetTop - pos2;
                 let newLeft = el.offsetLeft - pos1;
-             
+            
                 const headerHeight = 90;
                 const footerHeight = 100;
                 const btnSize = 36;
