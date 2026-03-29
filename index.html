@@ -29,7 +29,6 @@
         .bg-feminino { background-color: #f497a9 !important; }
         .bg-infantil { background-color: #f7d774 !important; }
         .neon-green { background-color: #f7d774; color: #000 !important; }
- 
         /* Animação de Ícones e Botões */
         .icon-btn {
             color: #000;
@@ -40,7 +39,6 @@
             transform: scale(1.3);
             color: #4b5563;
         }
- 
         /* Categorias Home */
         .cat-card {
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -57,7 +55,6 @@
         .cat-card.clicked p {
             color: var(--cat-color) !important;
         }
- 
         /* Pages */
         .page {
             display: none;
@@ -68,18 +65,15 @@
             overflow-y: hidden;
         }
         .page.active { display: block; animation: fadeIn 0.3s; }
- 
         /* SCROLL SOMENTE NAS PÁGINAS QUE PRECISAM (mantido exatamente como estava nas outras abas) */
         #vitrine.page, #favoritos.page, #carrinho.page {
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
- 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
- 
         /* Menu Lateral */
         .drawer {
             transition: transform 0.3s ease-in-out;
@@ -87,7 +81,6 @@
             z-index: 40;
         }
         .drawer.active { transform: translateX(0); }
- 
         /* Card de Produto */
         .product-card {
             background: white;
@@ -103,7 +96,6 @@
             border-radius: 15px;
             margin-bottom: 10px;
         }
- 
         /* Botões do Card */
         .btn-cart {
             background: #53565a;
@@ -132,7 +124,6 @@
             background: #000;
             color: #f4d06f;
         }
- 
         /* Bottom Nav */
         .bottom-nav {
             position: fixed;
@@ -153,7 +144,6 @@
             border: none;
             outline: none;
         }
- 
         /* GRID RESPONSIVO PARA CARDS */
         #products-grid,
         #fav-list {
@@ -244,7 +234,6 @@
             cursor: pointer;
         }
         /* === OVERRIDES DOS 3 MODOS === */
- 
         /* Modo Escuro (preto) */
         body.theme-dark {
             background-color: #000000 !important;
@@ -298,7 +287,6 @@
         body.theme-dark .btn-fav span {
             color: #000000 !important;
         }
- 
         /* Elementos Amarelos viram Azuis no Modo Escuro no Carrinho */
         body.theme-dark .custom-checkbox:checked {
             background-color: #72bcd4 !important;
@@ -373,7 +361,6 @@
         body.theme-dim .btn-cart {
             color: #ffffff !important;
         }
- 
         /* Elementos Amarelos viram Azuis no Modo Cinza no Carrinho */
         body.theme-dim .custom-checkbox:checked {
             background-color: #72bcd4 !important;
@@ -478,7 +465,6 @@
         body.theme-dim .btn-fav.active span {
             color: #f4d06f !important;
         }
-
         /* === ALTERAÇÃO SOLICITADA: Botões de confirmação nos modais (favoritos e carrinho) ===
            Em modo escuro e cinza:
            - Botão SIM: texto amarelo + borda amarela
@@ -628,7 +614,7 @@
         let isMultiSelectMode = false;
         let user = JSON.parse(localStorage.getItem('user')) || null;
         let logoSrc = "RDM moda & estilo.svg";
-  
+ 
         const allProducts = [
             { id: 1, name: "Camisa Casual", price: 49.99, cat: "masculino" },
             { id: 2, name: "Calça Jeans", price: 89.90, cat: "masculino" },
@@ -723,7 +709,7 @@
                 pos4 = clientY;
                 let newTop = el.offsetTop - pos2;
                 let newLeft = el.offsetLeft - pos1;
-         
+        
                 // === ALTERAÇÃO FEITA: botão agora respeita EXATAMENTE os limites do <main> ===
                 // Não ultrapassa o header (90px) nem o footer (100px) em nenhum momento
                 const headerHeight = 90;
@@ -1128,6 +1114,17 @@
                 applyTheme();
             }
         });
+    </script>
+
+    <!-- === SCRIPT DO SERVICE WORKER (adicionado exatamente onde você pediu, sem alterar nada do resto) === -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then((reg) => console.log('Service Worker registrado com sucesso!', reg))
+            .catch((err) => console.log('Falha ao registrar Service Worker:', err));
+        });
+      }
     </script>
 </body>
 </html>
