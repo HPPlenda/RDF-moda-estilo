@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>RDM Moda & Estilo</title>
+    <title>RDF Moda & Estilo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -488,7 +488,7 @@
 <body>
     <div id="drawer" class="fixed inset-0 drawer flex">
         <div class="w-4/5 h-full bg-white px-6 pt-24 pb-24 shadow-2xl overflow-y-auto">
-            <h2 class="font-bold text-lg mb-8 cursor-pointer uppercase" onclick="showPage('sobre')">O QUE É A RDM MODA & ESTILO?</h2>
+            <h2 class="font-bold text-lg mb-8 cursor-pointer uppercase" onclick="showPage('sobre')">O QUE É A RDF MODA & ESTILO?</h2>
             <ul class="space-y-6 text-xl font-bold">
                 <li onclick="loadVitrine('masculino')" class="cursor-pointer">MASCULINO</li>
                 <li onclick="loadVitrine('feminino')" class="cursor-pointer">FEMININO</li>
@@ -500,7 +500,7 @@
     </div>
     <header class="fixed top-0 w-full bg-white border-b p-4 flex justify-between items-center z-50 shadow-sm">
         <i id="menu-icon" class="fa-solid fa-bars text-2xl icon-btn" onclick="toggleMenu()"></i>
-        <h1 class="font-bold text-lg">RDM Moda & Estilo</h1>
+        <h1 class="font-bold text-lg">RDF Moda & Estilo</h1>
         <div class="relative">
             <i class="fa-solid fa-cart-shopping text-2xl icon-btn" onclick="showPage('carrinho')"></i>
             <span id="cart-count" class="hidden absolute -top-2 -right-2 bg-[#ef4444] text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
@@ -511,7 +511,7 @@
             <!-- APENAS O CONTEÚDO DO HOME FOI ENVOLVIDO EM FLEXBOX PARA CENTRALIZAÇÃO TOTAL (horizontal + vertical) -->
             <!-- Mantido exatamente o mesmo HTML interno, mesmas classes, mesmas funcionalidades e mesmo comportamento do teclado -->
             <div class="flex flex-col items-center justify-center flex-1 gap-5 w-full">
-                <img src="RDM moda & estilo.svg" alt="Logo RDM" class="logo-img w-full max-w-xs mx-auto" style="margin-top: 130px;">
+                <img src="RDF moda & estilo.svg" alt="Logo RDF" class="logo-img w-full max-w-xs mx-auto" style="margin-top: 130px;">
                 <input id="search-input" type="text" placeholder="Buscar roupas..." class="custom-input">
                 <div class="grid grid-cols-3 gap-3 w-full">
                     <div class="cat-card bg-[#72bcd4] p-4 rounded-xl flex flex-col items-center" data-color="#72bcd4" data-cat="masculino">
@@ -568,11 +568,11 @@
             <button onclick="showPage('home')" class="bg-black text-white px-8 py-3 rounded-full uppercase font-bold">Voltar para Home</button>
         </section>
         <section id="sobre" class="page px-4 text-center">
-            <img src="RDM moda & estilo.svg" alt="Sobre RDM" class="w-full max-w-xs mx-auto mb-4" style="margin-top: 130px;">
+            <img src="RDF moda & estilo.svg" alt="Sobre RDF" class="w-full max-w-xs mx-auto mb-4" style="margin-top: 130px;">
             <div class="pb-20">
                 <p class="text-gray-800">
-                    <strong>RDM Moda & Estilo: Sua Loja em Manaus</strong><br><br>
-                    Bem-vindo à RDM Moda & Estilo! Criada pela empresária Cio Dira, nossa loja traz o melhor do varejo de alta qualidade para a palma da sua mão. Com este app Android, você garante looks masculinos, femininos e infantis com praticidade total. Navegue pelas categorias, escolha seus favoritos e receba no conforto da sua casa.
+                    <strong>RDF Moda & Estilo: Sua Loja em Manaus</strong><br><br>
+                    Bem-vindo à RDF Moda & Estilo! Criada pela empresária Cio Dira, nossa loja traz o melhor do varejo de alta qualidade para a palma da sua mão. Com este app Android, você garante looks masculinos, femininos e infantis com praticidade total. Navegue pelas categorias, escolha seus favoritos e receba no conforto da sua casa.
                 </p>
             </div>
         </section>
@@ -613,7 +613,7 @@
         let pendingCartDeleteIds = [];
         let isMultiSelectMode = false;
         let user = JSON.parse(localStorage.getItem('user')) || null;
-        let logoSrc = "RDM moda & estilo.svg";
+        let logoSrc = "RDF moda & estilo.svg";
  
         const allProducts = [
             { id: 1, name: "Camisa Casual", price: 49.99, cat: "masculino" },
@@ -657,7 +657,7 @@
             const imgs = document.querySelectorAll('img');
             imgs.forEach(img => {
                 const currentSrcAttr = img.getAttribute('src');
-                if (currentSrcAttr === "RDM moda & estilo.svg" || currentSrcAttr === "RDM moda & estilo2.svg") {
+                if (currentSrcAttr === "RDF moda & estilo.svg" || currentSrcAttr === "RDF moda & estilo2.svg") {
                     img.setAttribute('src', logoSrc);
                 }
             });
@@ -679,7 +679,7 @@
                 }
             }
             // Troca da imagem apenas no modo escuro (conforme solicitado)
-            logoSrc = mode.name === 'dark' ? "RDM moda & estilo2.svg" : "RDM moda & estilo.svg";
+            logoSrc = mode.name === 'dark' ? "RDF moda & estilo2.svg" : "RDF moda & estilo.svg";
             updateAllRDMLogos();
         }
         function makeDraggable(el) {
