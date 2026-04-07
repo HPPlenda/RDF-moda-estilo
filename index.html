@@ -7,13 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- === SUPABASE ADICIONADO AQUI (no final do <head>, como é recomendado) === -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        const supabase = supabase.createClient('URL_DO_SEU_DOCKER_LOCAL', 'SUA_ANON_KEY');
-    </script>
-    
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -621,6 +614,7 @@
         let isMultiSelectMode = false;
         let user = JSON.parse(localStorage.getItem('user')) || null;
         let logoSrc = "RDF moda & estilo.svg";
+ 
         const allProducts = [
             { id: 1, name: "Camisa Casual", price: 49.99, cat: "masculino" },
             { id: 2, name: "Calça Jeans", price: 89.90, cat: "masculino" },
@@ -715,7 +709,7 @@
                 pos4 = clientY;
                 let newTop = el.offsetTop - pos2;
                 let newLeft = el.offsetLeft - pos1;
-      
+        
                 // === ALTERAÇÃO FEITA: botão agora respeita EXATAMENTE os limites do <main> ===
                 // Não ultrapassa o header (90px) nem o footer (100px) em nenhum momento
                 const headerHeight = 90;
@@ -950,11 +944,7 @@
         function prepareMultiCartDelete() {
             if (selectedCartIds.length === 0) return;
             pendingCartDeleteIds = [...selectedCartIds];
-            // ALTERAÇÃO FEITA AQUI (única mudança solicitada):
-            // Se o usuário selecionou EXATAMENTE 1 item no modo "SELECIONAR ITENS",
-            // mostra a mensagem no singular ("excluir esse item") em vez do plural.
-            // Se forem 2 ou mais itens, continua mostrando a mensagem no plural.
-            showCartConfirmModal(selectedCartIds.length > 1);
+            showCartConfirmModal(true);
         }
         function showCartConfirmModal(isMulti) {
             const modal = document.getElementById('cart-confirm-modal');
@@ -1125,6 +1115,7 @@
             }
         });
     </script>
+
     <!-- === SCRIPT DO SERVICE WORKER (adicionado exatamente onde você pediu, sem alterar nada do resto) === -->
     <script>
       if ('serviceWorker' in navigator) {
